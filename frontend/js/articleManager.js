@@ -1,14 +1,13 @@
 /**
  * Gestion des articles en objet, gère le tri par prix
  */
-class ArticleManager extends Article {
+class ArticleManager {
     constructor(jsonArticle){
-        super.jsonArticle && Object.assign(this, jsonArticle);
+        jsonArticle && Object.assign(this, jsonArticle);
     }
 
-    getArticleById(id){
-        id = this.id;
-        console.log(id);
+    getArticleById(){
+        return this._id;
     }
 
     sort(){

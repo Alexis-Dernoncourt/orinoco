@@ -7,6 +7,10 @@ class Article {
         jsonArticle && Object.assign(this, jsonArticle);
     }
 
+    getArticleById(id){
+        return id;
+    }
+
     getFormatedPrice(price){
         let formatedPrice = price / 1000;
         return formatedPrice;
