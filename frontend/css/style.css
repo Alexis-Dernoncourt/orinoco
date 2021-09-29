@@ -34,6 +34,10 @@
     border-radius: 0 0 0 0 !important;
 }
 
+#select-number-of-items-to-add-to-cart {
+    width: 50px;
+}
+
 .card-link > a:hover {
  color: #82448f !important;
  text-decoration: underline !important;

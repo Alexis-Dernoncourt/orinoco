@@ -23,10 +23,11 @@ fetch("http://localhost:3000/api/cameras/"+ID)
                             <p class="card-text text-center fw-bold fs-3">${article.price / 1000}${0}<sup>€</sup></p>
                             
                             <div class="d-flex justify-content-center">
-                            <button class="btn" id="add-to-cart-btn" data-id="${article._id}">
-                                + Ajouter au panier
-                            </button>
-                        </div>
+                                <input class="rounded" type="number" min="1" max="20" step="1" id="select-number-of-items-to-add-to-cart">
+                                <button class="btn" id="add-to-cart-btn" data-id="${article._id}">
+                                    + Ajouter au panier
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,11 +38,13 @@ fetch("http://localhost:3000/api/cameras/"+ID)
                 </p>
             `
         const btn = document.querySelector("#add-to-cart-btn");
+        const numberOfItemsToAdd = document.querySelector("#select-number-of-items-to-add-to-cart");
         btn.addEventListener("click", () => {
             getElementToAddToCart(
                 btn.attributes["data-id"].value,
                 article.name,
-                article.price / 1000
+                article.price / 1000,
+                numberOfItemsToAdd.value
             );
         });
     })
