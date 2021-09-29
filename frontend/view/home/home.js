@@ -3,7 +3,7 @@ console.log('Home is running !');
 fetch("http://localhost:3000/api/cameras")
     .then( data => data.json())
     .then( jsonListArticle => {
-        console.log(jsonListArticle);
+        // console.log(jsonListArticle);
         for (let jsonArticle of jsonListArticle){
             let article = new ArticleManager(jsonArticle);
             document.querySelector(".articles-home").innerHTML += `
@@ -19,6 +19,7 @@ fetch("http://localhost:3000/api/cameras")
                     <div class="card-body">
                         <p class="card-text text-center p-md-4">${article.description}</p>
                         <p class="card-text text-center fw-bold fs-3">${article.price / 1000}${0}<sup>€</sup></p>
+                        
                         <p class="text-end card-link">
                             <a  href="http://127.0.0.1:5500/frontend/view/article/article.html?id=${article._id}"
                                 class="text-decoration-none text-reset">
@@ -30,8 +31,6 @@ fetch("http://localhost:3000/api/cameras")
             `
         }
     })
-    .catch(err => {
-        console.log("Il y a eu une erreur : " + err);
-    })
-
-    
+.catch(err => {
+    console.log("Il y a eu une erreur : " + err);
+})

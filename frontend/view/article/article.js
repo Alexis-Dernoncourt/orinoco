@@ -3,12 +3,12 @@ console.log('Article is running !');
 /**
  * Récupération du paramètre id de l'url
  */
-let ID = new URL(location.href).searchParams.get("id");
+const ID = new URL(location.href).searchParams.get("id");
 
 fetch("http://localhost:3000/api/cameras/"+ID)
     .then( data => data.json())
     .then( jsonListArticle => {
-        console.log(jsonListArticle);
+        //console.log(jsonListArticle);
         
             let article = new ArticleManager(jsonListArticle);
             document.querySelector(".page-article").innerHTML += `
@@ -22,6 +22,11 @@ fetch("http://localhost:3000/api/cameras/"+ID)
                             <p class="card-text text-center p-4">${article.description}</p>
                             <p class="card-text text-center fw-bold fs-3">${article.price / 1000}${0}<sup>€</sup></p>
                             
+                            <div class="d-flex justify-content-center">
+                            <button class="btn" id="add-to-cart-btn" data-id="${article._id}">
+                                + Ajouter au panier
+                            </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -31,8 +36,15 @@ fetch("http://localhost:3000/api/cameras/"+ID)
                     </a>
                 </p>
             `
-        
+        const btn = document.querySelector("#add-to-cart-btn");
+        btn.addEventListener("click", () => {
+            getElementToAddToCart(
+                btn.attributes["data-id"].value,
+                article.name,
+                article.price / 1000
+            );
+        });
     })
     .catch(err => {
         console.log("Il y a eu une erreur : " + err);
-    })
+    });
