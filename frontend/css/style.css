@@ -1,3 +1,21 @@
+/* MAIN MENU */
+.nav-link {
+    font-size: 1.2rem;
+    color: #a868b5 !important;
+    font-weight: bold;
+    transition: color .2s;
+}
+.nav-link:hover {
+    color: #d17e42 !important;
+    transition: color .2s;
+}
+.active{
+    background-color: #d17e4223 !important;
+    border-radius: 4px;
+}
+
+/* ARTICLE CARDS HOME-PAGE */
+
 .bg-title-cards-home {
     padding-top: 15px;
     border-radius: 4px 4px 0 0 !important;
@@ -14,4 +32,15 @@
 
 .card-img-top {
     border-radius: 0 0 0 0 !important;
+}
+
+.card-link > a:hover {
+ color: #82448f !important;
+ text-decoration: underline !important;
+}
+
+@media screen and (max-width: 991px) {
+    .img-page-article {
+        width: 100% !important;
+    }
 }
