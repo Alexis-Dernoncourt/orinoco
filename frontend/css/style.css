@@ -3,6 +3,13 @@
     display: none !important;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 1.5rem;
+}
+
 /* MAIN MENU */
 .nav-link {
     font-size: 1.2rem;

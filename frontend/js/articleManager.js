@@ -94,6 +94,7 @@ function getArticleById(article){
      */
     document.querySelector(".second-div").classList.remove("display-none");
     document.querySelector(".second-div").innerHTML += `
+    <div id="article-unique">
         <div class="card m-auto col-10 flex-lg-row col-lg-12">
             <img src="${article.img}" class="w-50 img-page-article" />
             <div class="card-body d-flex flex-column justify-content-evenly">
@@ -127,6 +128,7 @@ function getArticleById(article){
                 < Retourner vers l'accueil
             </a>
         </p>
+    </div>
     `
     /**
      * Gestion des boutons d'ajout au panier
@@ -145,24 +147,11 @@ function getArticleById(article){
     /**
      * Gestion des boutons retour homepage
      */
-    const backToHome = document.querySelectorAll("a[data-link]");
-    const articleContainer = document.querySelector(".second-div");
-    backToHome.forEach(element => {
+    const backHome = document.querySelectorAll("a[data-link]");
+    backHome.forEach(element => {
         element.addEventListener("click", (e) => {
             e.preventDefault();
-            /**
-             * Modification de l'url
-             */
-            const homeUrl = '/frontend/view/home/index.html';
-            history.pushState({}, null, homeUrl);
-
-            if (window.location.pathname === homeUrl){
-                articleContainer.classList.add("display-none");
-                const divToShow = document.querySelector(".main-div");
-                divToShow.classList.remove("display-none");
-            } else {
-                console.log(window.location.pathname);
-            }
-        })
+            backToHome();
+        });
     });
 };
