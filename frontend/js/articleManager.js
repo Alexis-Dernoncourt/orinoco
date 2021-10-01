@@ -1,18 +1,168 @@
 /**
- * Gestion des articles en objet, gère le tri par prix
+ * Récupération de tous les articles et formatage/injection du contenu sur la homepage
  */
-class ArticleManager {
-    constructor(jsonArticle){
-        jsonArticle && Object.assign(this, jsonArticle);
-    }
 
-    getArticleById(){
-        return this._id;
-    }
+function getAllArticles(){
+    fetch("http://localhost:3000/api/cameras")
+            .then( data => data.json())
+            .then( jsonListArticle => {
+                for (let jsonArticle of jsonListArticle){
+                    let article = new Article(jsonArticle);
+                    document.querySelector(".main-div").innerHTML += `
+                        <div class="card m-5 col-md-4 shadow rounded list-item">
+                            <div class="card-header bg-title-cards-home">
+                                <a  data-id="${article._id}"
+                                    data-lenses="${article.lenses}"
+                                    data-name="${article.name}"
+                                    data-img="${article.imageUrl}"
+                                    data-desc="${article.description}"
+                                    data-price="${article.price}"
+                                    href=""
+                                >
+                                    <h3 class="card-title d-flex justify-content-center">${article.name}</h3>
+                                </a>
+                            </div>
+                            <a  data-id="${article._id}"
+                                data-lenses="${article.lenses}"
+                                data-name="${article.name}"
+                                data-img="${article.imageUrl}"
+                                data-desc="${article.description}"
+                                data-price="${article.price}"
+                                href=""
+                            >
+                                <img src="${article.imageUrl}" class="card-img-top" />
+                            </a>
+                            <div class="card-body">
+                                <p class="card-text text-center p-md-4">${article.description}</p>
+                                <p class="card-text text-center fw-bold fs-3">${article.price / 1000}${0}<sup>€</sup></p>
+                                
+                                <p class="text-end card-link">
+                                    <a  data-id="${article._id}"
+                                        data-lenses="${article.lenses}"
+                                        data-name="${article.name}"
+                                        data-img="${article.imageUrl}"
+                                        data-desc="${article.description}"
+                                        data-price="${article.price}"
+                                        href=""
+                                        class="text-decoration-none text-reset"
+                                    >
+                                        Voir l'article
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    `
+                    const linkToArticle = document.querySelectorAll("a[data-id");
+                    for (let i of linkToArticle){
+                        i.addEventListener('click', function(e){
+                            e.preventDefault();
+                            getArticleById(this.dataset);
+                        });
+                    }
+                };
+            })
+        .catch(err => {
+            console.log("Il y a eu une erreur : " + err);
+        });
+};
 
-    sort(){
-        return this.listArticle.sort((a,b) => {
-            return (this.listArticle(a.price) < this.listArticle(b.price)) ? 1 : -1;
+function getArticleById(article){
+    /**
+     * Ajoute un paramètre à l'url (nom de l'article) sans recharger la page :
+     */
+    let url = window.location.href;
+    let paramUrl = article.name;
+    paramUrl = paramUrl.replace(/ /g, '-');
+    const newUrl = url + "/" + paramUrl;
+    history.pushState({}, null, newUrl);
+    /**
+     * Cache la liste des articles sur la homepage :
+     */
+    const divToHide = document.querySelector(".main-div");
+    divToHide.classList.add("display-none");
+
+    /**
+     * Prépare le bouton de selection du choix de la lentille :
+     */
+    const lenses = article.lenses.split(',');
+    const showLenses = lenses.map(el => {
+        return '<option value='+el+'>'+el+'</option>';
+    });
+        
+    /**
+     * Affiche l'article sélectionné :
+     */
+    document.querySelector(".second-div").classList.remove("display-none");
+    document.querySelector(".second-div").innerHTML += `
+        <div class="card m-auto col-10 flex-lg-row col-lg-12">
+            <img src="${article.img}" class="w-50 img-page-article" />
+            <div class="card-body d-flex flex-column justify-content-evenly">
+                <div>
+                    <h3 class="text-center">${article.name}</h3>
+                </div>
+                <div>
+                    <p class="card-text text-center p-4">${article.desc}</p>
+                    <p class="card-text text-center fw-bold fs-3">${article.price / 1000}${0}<sup>€</sup></p>
+                    
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="d-block m-3">
+                            <label for="select-lense"></label>
+                            <select required id="select-lense" name"lense" type="select">
+                                <option value=""> > Choisissez une option </option>
+                                ${showLenses}
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center m-3">
+                            <input class="rounded" type="number" required min="1" max="20" step="1" id="select-number-of-items-to-add-to-cart" />
+                            <button class="btn" id="add-to-cart-btn">
+                                + Ajouter au panier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="text-end m-5 card-link">
+            <a data-link="home" class="text-decoration-none text-reset" href="">
+                < Retourner vers l'accueil
+            </a>
+        </p>
+    `
+    /**
+     * Gestion des boutons d'ajout au panier
+     */
+     const btn = document.querySelector("#add-to-cart-btn");
+     const numberOfItemsToAdd = document.querySelector("#select-number-of-items-to-add-to-cart");
+     btn.addEventListener("click", () => {
+         getElementToAddToCart(
+             article.id,
+             article.name,
+             article.price,
+             numberOfItemsToAdd.value
+         );
+     });
+
+    /**
+     * Gestion des boutons retour homepage
+     */
+    const backToHome = document.querySelectorAll("a[data-link]");
+    const articleContainer = document.querySelector(".second-div");
+    backToHome.forEach(element => {
+        element.addEventListener("click", (e) => {
+            e.preventDefault();
+            /**
+             * Modification de l'url
+             */
+            const homeUrl = '/frontend/view/home/index.html';
+            history.pushState({}, null, homeUrl);
+
+            if (window.location.pathname === homeUrl){
+                articleContainer.classList.add("display-none");
+                const divToShow = document.querySelector(".main-div");
+                divToShow.classList.remove("display-none");
+            } else {
+                console.log(window.location.pathname);
+            }
         })
-    }
-}
+    });
+};

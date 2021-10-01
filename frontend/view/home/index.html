@@ -14,7 +14,7 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light p-3">
-        <a class="navbar-brand mx-5" href="http://127.0.0.1:5500/frontend/view/home/home.html">
+        <a class="navbar-brand mx-5 go-to-home-btn" data-link="home" href="">
             <picture>
                 <source media="(max-width: 767px)" srcset="../../img/logo-picto-caddie-orinoco.png">
                 <source media="(min-width: 768px)" srcset="../../img/logo-orinoco.png">
@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse justify-content-lg-end mx-5" id="mainNavbarToggler">
           <ul class="navbar-nav mt-2 text-end justify-content-sm-end">
             <li class="nav-item mx-4 p-3 active">
-              <a class="nav-link" aria-current="page" href="http://127.0.0.1:5500/frontend/view/home/home.html">Accueil</a>
+              <a class="nav-link go-to-home-btn" data-link="home" aria-current="page" href="">Accueil</a>
             </li>
             <li class="nav-item mx-4 p-3">
               <a class="nav-link" href="#">Panier &#128722;</a>
@@ -37,15 +37,16 @@
         </div>
     </nav>
     <main>
-      <h1 class="container mt-5 text-center">Accueil ORINOCO</h1>
+      <h1 class="container mt-5 text-center">ORINOCO</h1>
       <div class="container">
-          <div class="d-flex flex-wrap justify-content-around mt-2 articles-home"></div>
+          <div class="d-flex flex-wrap justify-content-around mt-2 main-div"></div>
+          <div class="d-flex flex-wrap justify-content-around mt-2 second-div display-none"></div>
       </div>
     </main>
 
     <footer>
       <div class="w-100 mt-4 p-4 text-center bg-light">
-        <a class="navbar-brand mx-5" href="http://127.0.0.1:5500/frontend/view/home/home.html">
+        <a class="navbar-brand mx-5 go-to-home-btn" data-link="home" href="">
           <picture>
               <source media="(max-width: 767px)" srcset="../../img/logo-picto-caddie-orinoco.png">
               <source media="(min-width: 768px)" srcset="../../img/logo-orinoco.png">
@@ -56,7 +57,10 @@
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="../../js/Article.js"></script>
     <script src="../../js/ArticleManager.js"></script>
     <script src="./home.js"></script>
+    <script src="../../js/functions.js"></script>
+    <script src="../../js/CartManager.js"></script>
 </body>
 </html>

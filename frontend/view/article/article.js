@@ -32,7 +32,7 @@ fetch("http://localhost:3000/api/cameras/"+ID)
                     </div>
                 </div>
                 <p class="text-end m-5 card-link">
-                    <a class="text-decoration-none text-reset" href="http://127.0.0.1:5500/frontend/view/home/home.html">
+                    <a class="text-decoration-none text-reset" href="http://127.0.0.1:5500/frontend/view/home/index.html">
                         < Retourner vers l'accueil
                     </a>
                 </p>

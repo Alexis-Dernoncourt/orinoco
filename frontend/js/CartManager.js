@@ -1,5 +1,5 @@
 /**
- * Récupération des id des articles sélectionnés et ajout au panier (localstorage)
+ * Gestion de la récupération des id des articles sélectionnés et de l'ajout au panier (localstorage)
 */
 console.log("CartManager is running !");
 
