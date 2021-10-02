@@ -3,42 +3,48 @@
 */
 console.log("CartManager is running !");
 
-function getElementToAddToCart(elt, name, price, numberOfItemsToAdd){
-    if(elt !== "" && elt !== undefined && name !== "" && price !== NaN && price > 0 && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
-        const itemsToAddToCart = {"id" : elt, "produit" : name, "prix" : price, "quantite" : numberOfItemsToAdd};
+function getElementToAddToCart(elt, name, lense, price, numberOfItemsToAdd){
+    const errorMessage = document.querySelector("#alert-message");
+    errorMessage.classList.remove("alert", "alert-warning");
+    errorMessage.textContent = "";
+    if(elt !== "" && elt !== undefined && name !== "" && lense !== "" && lense != undefined && price !== NaN && price > 0 && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
+        const itemsToAddToCart = {"id" : elt, "produit" : name, "objectif" : lense, "prix" : price, "quantite" : numberOfItemsToAdd};
         addItemToCart(itemsToAddToCart);
+        errorMessage.classList.add("alert", "alert-success");
+        errorMessage.textContent = "L'élément à bien été ajouté au panier !";
     } else {
-        console.log("Il y a eu une erreur, veuillez réessayer.");
+        errorMessage.classList.add("alert", "alert-warning");
+        errorMessage.textContent = "Il y a eu une erreur, veillez à choisir une option et une quantité."
     }
-    //console.log(elt, name, price, numberOfItemsToAdd);
-}
+};
 
 function addItemToCart(item){
-    //console.log("2 " + item[3]);
-    if ( localStorage.getItem(item.produit) ){
-        console.log("OK1");
-        const panier = JSON.parse(localStorage.getItem(item.produit));
+    const key = item.produit + "_" + item.objectif;
+    if ( localStorage.getItem(key) ){
+        const panier = JSON.parse(localStorage.getItem(key));
         if( panier !== null){
-            //console.log(panier.id);
-            if (item.id === panier.id){
-                console.log("les id sont égaux");
+            if (item.id+"_"+item.objectif === panier.id+"_"+panier.objectif){
                 let nouvelleQuantite =  parseInt(panier.quantite) + parseInt(item.quantite);
-                //console.log(nouvelleQuantite);
-                //panier.quantite = nouvelleQuantite;
-                //console.log(panier);
-                const panierModifie = {"id" : item.id, "produit" : item.produit, "prix" : item.prix, "quantite" : nouvelleQuantite}
-                //localStorage.removeItem(item.produit);
-                localStorage.setItem(item.produit, JSON.stringify(panierModifie));
+                const panierModifie = {"id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : nouvelleQuantite}
+                localStorage.setItem(key, JSON.stringify(panierModifie));
             } else {
-                console.log("les id ne sont pas égaux");
-                localStorage.setItem(item.produit, JSON.stringify(item));
+                localStorage.setItem(key, JSON.stringify(item));
             }
         } else {
-            console.log("OK3");
-            localStorage.setItem(item.produit, JSON.stringify(item));
+            localStorage.setItem(key, JSON.stringify(item));
         }
     } else {
-        console.log("OK2");
-        localStorage.setItem(item.produit, JSON.stringify(item));
+        localStorage.setItem(key, JSON.stringify(item));
     }
+};
+
+/**Récupère et retourne la valeur du select*/
+function getSelectionnedLense(selectId){
+	// Récupère l'élement html select
+	let selectElmt = document.getElementById(selectId);
+	/**
+	selectElmt.options = tableau des balises <option> du select
+	selectElmt.selectedIndex = index du tableau options qui est sélectionné
+	*/
+	return selectElmt.options[selectElmt.selectedIndex].value;
 };

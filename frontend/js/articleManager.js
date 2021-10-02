@@ -9,7 +9,7 @@ function getAllArticles(){
                 for (let jsonArticle of jsonListArticle){
                     let article = new Article(jsonArticle);
                     document.querySelector(".main-div").innerHTML += `
-                        <div class="card m-5 col-md-4 shadow rounded list-item">
+                        <div class="card border-0 m-5 col-md-4 shadow rounded list-item">
                             <div class="card-header bg-title-cards-home">
                                 <a  data-id="${article._id}"
                                     data-lenses="${article.lenses}"
@@ -52,6 +52,8 @@ function getAllArticles(){
                             </div>
                         </div>
                     `
+                    document.querySelector("#title").textContent = "Découvrez tous nos appareils photo";
+
                     const linkToArticle = document.querySelectorAll("a[data-id");
                     for (let i of linkToArticle){
                         i.addEventListener('click', function(e){
@@ -86,18 +88,19 @@ function getArticleById(article){
      */
     const lenses = article.lenses.split(',');
     const showLenses = lenses.map(el => {
-        return '<option value='+el+'>'+el+'</option>';
+        return `<option value="${el}">${el}</option>`;
     });
         
     /**
      * Affiche l'article sélectionné :
      */
     document.querySelector(".second-div").classList.remove("display-none");
+    document.querySelector("#title").textContent = "Découvrez le " + article.name;
     document.querySelector(".second-div").innerHTML += `
     <div id="article-unique">
-        <div class="card m-auto col-10 flex-lg-row col-lg-12">
+        <div class="card border-0 m-auto col-10 flex-lg-row col-lg-12">
             <img src="${article.img}" class="w-50 img-page-article" />
-            <div class="card-body d-flex flex-column justify-content-evenly">
+            <div class="card-body d-flex flex-column justify-content-evenly align-items-center">
                 <div>
                     <h3 class="text-center">${article.name}</h3>
                 </div>
@@ -121,6 +124,9 @@ function getArticleById(article){
                         </div>
                     </div>
                 </div>
+                <div>
+                    <span id="alert-message" role="alert"></span>
+                </div>
             </div>
         </div>
         <p class="text-end m-5 card-link">
@@ -133,16 +139,18 @@ function getArticleById(article){
     /**
      * Gestion des boutons d'ajout au panier
      */
-     const btn = document.querySelector("#add-to-cart-btn");
-     const numberOfItemsToAdd = document.querySelector("#select-number-of-items-to-add-to-cart");
-     btn.addEventListener("click", () => {
-         getElementToAddToCart(
-             article.id,
-             article.name,
-             article.price,
-             numberOfItemsToAdd.value
-         );
-     });
+    const btn = document.querySelector("#add-to-cart-btn");
+    const numberOfItemsToAdd = document.querySelector("#select-number-of-items-to-add-to-cart");
+    btn.addEventListener("click", () => {
+        const lense = getSelectionnedLense("select-lense");
+        getElementToAddToCart(
+            article.id,
+            article.name,
+            lense,
+            article.price,
+            numberOfItemsToAdd.value
+        );
+    });
 
     /**
      * Gestion des boutons retour homepage
