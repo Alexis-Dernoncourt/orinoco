@@ -78,6 +78,14 @@ body {
  text-decoration: underline !important;
 }
 
+/* PAGE DETAILS D'UN ARTICLE */
+.main-background-color {
+    background-color: rgb(143,91,251) !important;
+    color: #fff;
+}
+
+/* -------------------- */
+
 @media screen and (max-width: 991px) {
     .img-page-article {
         width: 100% !important;

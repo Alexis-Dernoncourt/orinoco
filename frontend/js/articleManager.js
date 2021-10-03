@@ -116,9 +116,12 @@ function getArticleById(article){
                                 ${showLenses}
                             </select>
                         </div>
-                        <div class="d-flex justify-content-center m-3">
-                            <input class="rounded" type="number" required min="1" max="20" step="1" id="select-number-of-items-to-add-to-cart" />
-                            <button class="btn" id="add-to-cart-btn">
+                        <div class="d-flex flex-column align-items-center justify-content-center m-3">
+                            <div>
+                                <label for="select-number-of-items-to-add-to-cart">Quantité : </label>
+                                    <input class="rounded" type="number" required min="1" max="20" step="1" id="select-number-of-items-to-add-to-cart" />
+                            </div>
+                            <button class="btn shadow rounded-pill mt-5 text-uppercase fs-6 p-3 main-background-color" id="add-to-cart-btn">
                                 + Ajouter au panier
                             </button>
                         </div>
