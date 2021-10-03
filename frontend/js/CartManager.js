@@ -7,7 +7,7 @@ function getElementToAddToCart(elt, name, lense, price, numberOfItemsToAdd){
     const errorMessage = document.querySelector("#alert-message");
     errorMessage.classList.remove("alert", "alert-warning");
     errorMessage.textContent = "";
-    if(elt !== "" && elt !== undefined && name !== "" && lense !== "" && lense != undefined && price !== NaN && price > 0 && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
+    if(elt !== "" && elt !== undefined && name !== "" && name != undefined && lense !== "" && lense !== undefined && price !== undefined && price > 0 && numberOfItemsToAdd !== undefined && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
         const itemsToAddToCart = {"id" : elt, "produit" : name, "objectif" : lense, "prix" : price, "quantite" : numberOfItemsToAdd};
         addItemToCart(itemsToAddToCart);
         errorMessage.classList.add("alert", "alert-success");
@@ -24,7 +24,7 @@ function addItemToCart(item){
         const panier = JSON.parse(localStorage.getItem(key));
         if( panier !== null){
             if (item.id+"_"+item.objectif === panier.id+"_"+panier.objectif){
-                let nouvelleQuantite =  parseInt(panier.quantite) + parseInt(item.quantite);
+                const nouvelleQuantite =  parseInt(panier.quantite) + parseInt(item.quantite);
                 const panierModifie = {"id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : nouvelleQuantite}
                 localStorage.setItem(key, JSON.stringify(panierModifie));
                 numberOfItemsInCart();
