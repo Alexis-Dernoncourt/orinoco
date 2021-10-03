@@ -27,14 +27,18 @@ function addItemToCart(item){
                 let nouvelleQuantite =  parseInt(panier.quantite) + parseInt(item.quantite);
                 const panierModifie = {"id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : nouvelleQuantite}
                 localStorage.setItem(key, JSON.stringify(panierModifie));
+                numberOfItemsInCart();
             } else {
                 localStorage.setItem(key, JSON.stringify(item));
+                numberOfItemsInCart();
             }
         } else {
             localStorage.setItem(key, JSON.stringify(item));
+            numberOfItemsInCart();
         }
     } else {
         localStorage.setItem(key, JSON.stringify(item));
+        numberOfItemsInCart();
     }
 };
 
@@ -47,4 +51,22 @@ function getSelectionnedLense(selectId){
 	selectElmt.selectedIndex = index du tableau options qui est sélectionné
 	*/
 	return selectElmt.options[selectElmt.selectedIndex].value;
+};
+
+/**Ajoute un élément d'identification visuel rapide du nombre d'articles dans le panier */
+function numberOfItemsInCart(){
+    if (localStorage.length > 0){
+        const tabOfItemsInCart = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                const items = JSON.parse(localStorage.getItem(localStorage.key(i)));
+                tabOfItemsInCart.push(parseInt(items.quantite));
+            };
+            const totalOfItemsInCart = tabOfItemsInCart.reduce((previousValue, currentValue) => previousValue + currentValue);
+            document.querySelector("#total-number-in-cart-container").classList.remove("display-none");
+            document.querySelector("#total-number-in-cart").textContent = totalOfItemsInCart;
+    } else {
+        //console.log("Le panier est vide.");
+        document.querySelector("#total-number-in-cart").textContent = "";
+        document.querySelector("#total-number-in-cart-container").classList.add("display-none");
+    }
 };

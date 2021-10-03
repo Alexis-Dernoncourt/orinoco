@@ -9,7 +9,7 @@ function getAllArticles(){
                 for (let jsonArticle of jsonListArticle){
                     let article = new Article(jsonArticle);
                     document.querySelector(".main-div").innerHTML += `
-                        <div class="card border-0 m-5 col-md-4 shadow rounded list-item">
+                        <div class="card border-0 my-4 m-lg-5 col-lg-4 shadow rounded list-item">
                             <div class="card-header bg-title-cards-home">
                                 <a  data-id="${article._id}"
                                     data-lenses="${article.lenses}"
@@ -111,7 +111,7 @@ function getArticleById(article){
                     <div class="d-flex flex-column align-items-center">
                         <div class="d-block m-3">
                             <label for="select-lense"></label>
-                            <select required id="select-lense" name"lense" type="select">
+                            <select required id="select-lense" name"lense" type="select" class="form-select">
                                 <option value=""> > Choisissez une option </option>
                                 ${showLenses}
                             </select>
@@ -124,9 +124,7 @@ function getArticleById(article){
                         </div>
                     </div>
                 </div>
-                <div>
-                    <span id="alert-message" role="alert"></span>
-                </div>
+                <div id="alert-message" role="alert"></div>
             </div>
         </div>
         <p class="text-end m-5 card-link">

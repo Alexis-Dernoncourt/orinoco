@@ -5,3 +5,4 @@ console.log('Home is running !');
 //const ID = new URL(location.href).searchParams.get("id");
 
 getAllArticles();
+numberOfItemsInCart();
