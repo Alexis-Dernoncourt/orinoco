@@ -20,3 +20,8 @@ function backToHome(){
       divToShow.classList.remove("display-none");
    }
 };
+
+/**
+ * Récupération, si existant, du nombre d'article(s) ajouté(s) au panier + notification visuelle
+ */
+Cart.numberOfItemsInCart();
