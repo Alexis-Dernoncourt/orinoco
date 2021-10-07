@@ -11,7 +11,7 @@ class Cart {
     /**Ajoute un élément d'identification visuel rapide du nombre d'articles dans le panier */
     static numberOfItemsInCart(){
         const panier = JSON.parse(localStorage.getItem("Panier"));
-        if (panier.length > 0){
+        if (panier !== null && panier.length > 0){
             const tabOfItemsInCart = [];
             panier.map(el => {
                 tabOfItemsInCart.push(parseInt(el.quantite));
