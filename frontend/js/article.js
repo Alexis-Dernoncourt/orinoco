@@ -95,6 +95,7 @@ class Article {
                         </div>
                     `
                     document.querySelector("#title").textContent = "Découvrez tous nos appareils photo";
+                    document.title = "Orinoco - Découvrez tous nos appareils photo";
 
                     const linkToArticle = document.querySelectorAll("a[data-id");
                     for (let i of linkToArticle){

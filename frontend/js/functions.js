@@ -7,7 +7,7 @@ function backToHome(){
    const divToHide = document.querySelector(".second-div");
    const divToShow = document.querySelector(".main-div");
    document.querySelector("#title").textContent = "Découvrez tous nos appareils photo";
-
+   document.title = "Orinoco - Découvrez tous nos appareils photo";
 
    if (window.location.pathname === homeUrl){
       divToHide.classList.add("display-none");
