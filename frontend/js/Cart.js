@@ -1,5 +1,6 @@
 class Cart {
-    constructor(id, produit, objectif, prix, quantite){
+    constructor(elementIdentifier, id, produit, objectif, prix, quantite){
+        this.elementIdentifier = elementIdentifier;
         this.id = id;
         this.produit = produit;
         this.objectif =objectif;
@@ -9,13 +10,13 @@ class Cart {
 
     /**Ajoute un élément d'identification visuel rapide du nombre d'articles dans le panier */
     static numberOfItemsInCart(){
-        if (localStorage.length > 0){
+        const panier = JSON.parse(localStorage.getItem("Panier"));
+        if (panier.length > 0){
             const tabOfItemsInCart = [];
-                for (var i = 0; i < localStorage.length; i++) {
-                    const items = JSON.parse(localStorage.getItem(localStorage.key(i)));
-                    tabOfItemsInCart.push(parseInt(items.quantite));
-                };
-                const totalOfItemsInCart = tabOfItemsInCart.reduce((previousValue, currentValue) => previousValue + currentValue);
+            panier.map(el => {
+                tabOfItemsInCart.push(parseInt(el.quantite));
+            });
+            const totalOfItemsInCart = tabOfItemsInCart.reduce((previousValue, currentValue) => previousValue + currentValue);
                 document.querySelector("#total-number-in-cart-container").classList.remove("display-none");
                 document.querySelector("#total-number-in-cart").textContent = totalOfItemsInCart;
         } else {
@@ -41,31 +42,40 @@ class Cart {
     
 
     static addItemToCart(item){
-        const key = item.produit + "_" + item.objectif;
-        if ( localStorage.getItem(key) ){
-            // Si l'article est déjà présent au sein du localStorage
-            const panier = JSON.parse(localStorage.getItem(key));
-            if (item.id+"_"+item.objectif === panier.id+"_"+panier.objectif){
-                /**
-                 * Si les id et l'option de l'article à ajouter et de l'article déjà présent sont identiques
-                 * alors seulement la quantité est modifiée dans le panier
-                 */
-                const nouvelleQuantite =  parseInt(panier.quantite) + parseInt(item.quantite);
-                const panierModifie = new Cart(item.id, item.produit, item.objectif, item.prix, nouvelleQuantite);
-                localStorage.setItem(key, JSON.stringify(panierModifie));
-                Cart.numberOfItemsInCart();
-            } 
-            // else {
-            //     // sinon on ajoute un nouvel article au panier avec l'option + la quantité choisie
-            //     console.log("item !== panier");
-            //     localStorage.setItem(key, JSON.stringify(item));
-            //     Cart.numberOfItemsInCart();
-            // }
+        // Initialisation du panier (tableau vide)
+        let cart = [];
+        // Si le panier existe déjà dans le localStorage
+        if ( localStorage.getItem("Panier") ){
+            // Le panier existe
+            const uniqueIdentifierOfArticleToAdd = item.elementIdentifier;
+            const articlesInCart = JSON.parse(localStorage.getItem("Panier"));
+            cart.push(...articlesInCart);
+
+            // Si l'article est déjà présent au sein du panier
+            // (+ vérifie si identiques : si oui modifier la quantité; si non : ajouter un nouvel élément)
+                if ( cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd) ){
+                    const itemToRemove = cart.findIndex(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd);
+                    cart.map(i => {
+                        if (i.elementIdentifier === uniqueIdentifierOfArticleToAdd){
+                            const previousQuantity = i.quantite;
+                            const nouvelleQuantite = previousQuantity + item.quantite;
+                            const panierModifie = new Cart(item.id+item.objectif, item.id, item.produit, item.objectif, item.prix, nouvelleQuantite);
+                            cart.splice(itemToRemove, 1, panierModifie);
+                            localStorage.setItem("Panier", JSON.stringify(cart));
+                            Cart.numberOfItemsInCart();
+                        }
+                    });
+                } else {
+                    // L'article n'est PAS présent dans le panier, on l'y ajoute
+                    cart.push(item);
+                    localStorage.setItem("Panier", JSON.stringify(cart));
+                    Cart.numberOfItemsInCart();
+                }
         } else {
-            // Si l'article n'est pas présent au sein du localStorage
-            // On ajoute un nouvel article au panier avec toutes ses caractéristiques + l'option + la quantité choisie
-            const newItem = item;
-            localStorage.setItem(key, JSON.stringify(newItem));
+            // Si le panier n'est pas présent au sein du localStorage
+            // On créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
+            cart.push(item);
+            localStorage.setItem("Panier", JSON.stringify(cart));
             Cart.numberOfItemsInCart();
         }
     };

@@ -14,12 +14,12 @@ class Article {
         return newFormatedPrice;
     };
 
-    static getElementToAddToCart(elt, name, lense, price, numberOfItemsToAdd){
+    static getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd){
         const errorMessage = document.querySelector("#alert-message");
         errorMessage.classList.remove("alert", "alert-warning");
         errorMessage.textContent = "";
         if(elt !== "" && elt !== undefined && name !== "" && name != undefined && lense !== "" && lense !== undefined && price !== undefined && price > 0 && numberOfItemsToAdd !== undefined && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
-            const itemToAddToCart = new Cart(elt, name, lense, price, numberOfItemsToAdd);
+            const itemToAddToCart = new Cart(elt, id, name, lense, price, numberOfItemsToAdd);
             Cart.addItemToCart(itemToAddToCart);
             errorMessage.classList.add("alert", "alert-success");
             errorMessage.textContent = "L'élément à bien été ajouté au panier !";
@@ -187,6 +187,7 @@ class Article {
                 const lense = Cart.getSelectionnedLense("select-lense");
                 const revertFormatedPrice = article.price.replace(",",".") * 1000;
                 Article.getElementToAddToCart(
+                    article.id+lense,
                     article.id,
                     article.name,
                     lense,
