@@ -200,7 +200,7 @@ class Article {
             /**
              * Gestion des boutons retour homepage
              */
-            const backHome = document.querySelectorAll("a[data-link]");
+            const backHome = document.querySelectorAll("a[data-link=home]");
             backHome.forEach(element => {
                 element.addEventListener("click", (e) => {
                     e.preventDefault(); 
