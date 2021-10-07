@@ -197,17 +197,24 @@ class Article {
                 );
             });
     
+
             /**
-             * Gestion des boutons retour homepage
+             * Gestion des boutons de navigation
              */
+
             const backHome = document.querySelectorAll("a[data-link=home]");
+            const cartBtn = document.querySelector("a[data-link=cart]");
+
             backHome.forEach(element => {
                 element.addEventListener("click", (e) => {
                     e.preventDefault(); 
                     backToHome();
                 });
             });
+            cartBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                goToCart();
+            });
         };
     };
-
 };
