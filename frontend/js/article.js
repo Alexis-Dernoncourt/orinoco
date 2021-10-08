@@ -14,31 +14,20 @@ class Article {
         return newFormatedPrice;
     };
 
-    static getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd){
-        const errorMessage = document.querySelector("#alert-message");
-        errorMessage.classList.remove("alert", "alert-warning");
-        errorMessage.textContent = "";
-        if(elt !== "" && elt !== undefined && name !== "" && name != undefined && lense !== "" && lense !== undefined && price !== undefined && price > 0 && numberOfItemsToAdd !== undefined && numberOfItemsToAdd !== NaN && numberOfItemsToAdd > 0){
-            const itemToAddToCart = new Cart(elt, id, name, lense, price, numberOfItemsToAdd);
-            Cart.addItemToCart(itemToAddToCart);
-            errorMessage.classList.add("alert", "alert-success");
-            errorMessage.textContent = "L'élément à bien été ajouté au panier !";
-        } else {
-            errorMessage.classList.add("alert", "alert-warning");
-            errorMessage.textContent = "Il y a eu une erreur, veillez à choisir une option et une quantité."
-        }
-    };
-
-    static showOptions(options){
-        /**
-         * Prépare le bouton de selection du choix de la lentille :
-         */
-        const lenses = options.split(',');
-        const showLenses = lenses.map(el => {
-            return `<option value="${el}">${el}</option>`;
-        });
-        return showLenses;
-    };
+    // getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd){
+    //     const errorMessage = document.querySelector("#alert-message");
+    //     errorMessage.classList.remove("alert", "alert-warning");
+    //     errorMessage.textContent = "";
+    //     if(elt && id && name && lense && price && numberOfItemsToAdd) {
+    //         const itemToAddToCart = {"elementIdentifier" : item.id+item.objectif, "id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : numberOfItemsToAdd};
+    //         addItemToCart(itemToAddToCart);
+    //         errorMessage.classList.add("alert", "alert-success");
+    //         errorMessage.textContent = "L'élément à bien été ajouté au panier !";
+    //     } else {
+    //         errorMessage.classList.add("alert", "alert-warning");
+    //         errorMessage.textContent = "Il y a eu une erreur, veillez à choisir une option et une quantité."
+    //     }
+    // };
 
     static getAllArticles(){
         fetch("http://localhost:3000/api/cameras")
@@ -46,9 +35,6 @@ class Article {
             .then(jsonListArticle => {
                 for (let jsonArticle of jsonListArticle){
                     let article = new Article(jsonArticle);
-
-                    let paramUrl = article.name;
-                    paramUrl = paramUrl.replace(/ /g, '-');
 
                     document.querySelector(".main-div").innerHTML += `
                         <div class="card border-0 my-4 m-lg-5 col-lg-4 shadow rounded list-item">
@@ -59,7 +45,7 @@ class Article {
                                     data-img="${article.imageUrl}"
                                     data-desc="${article.description}"
                                     data-price="${article.getFormatedPrice()}"
-                                    href="${window.location.href}/${paramUrl}"
+                                    href="${window.location.href}/${updateHrefLinkAndUrlParam(article.name)}"
                                 >
                                     <h3 class="card-title d-flex justify-content-center main-font-family">${article.name}</h3>
                                 </a>
@@ -70,7 +56,7 @@ class Article {
                                 data-img="${article.imageUrl}"
                                 data-desc="${article.description}"
                                 data-price="${article.getFormatedPrice()}"
-                                href="${window.location.href}/${paramUrl}"
+                                href="${window.location.href}/${updateHrefLinkAndUrlParam(article.name)}"
                             >
                                 <img src="${article.imageUrl}" class="card-img-top" />
                             </a>
@@ -85,7 +71,7 @@ class Article {
                                         data-img="${article.imageUrl}"
                                         data-desc="${article.description}"
                                         data-price="${article.getFormatedPrice()}"
-                                        href="${window.location.href}/${paramUrl}"
+                                        href="${window.location.href}/${updateHrefLinkAndUrlParam(article.name)}"
                                         class="text-decoration-none text-reset"
                                     >
                                         Voir l'article
@@ -94,8 +80,8 @@ class Article {
                             </div>
                         </div>
                     `
-                    document.querySelector("#title").textContent = "Découvrez tous nos appareils photo";
-                    document.title = "Orinoco - Découvrez tous nos appareils photo";
+                    changeTitleContentOfPage("Decouvrez tous nos appareils photo");
+                    changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
 
                     const linkToArticle = document.querySelectorAll("a[data-id");
                     for (let i of linkToArticle){
@@ -116,8 +102,8 @@ class Article {
          * Ajoute un paramètre à l'url (nom de l'article) sans recharger la page :
          */
         let url = window.location.href;
-        let paramUrl = article.name;
-        paramUrl = paramUrl.replace(/ /g, '-');
+        let paramUrl = article.id;
+        //paramUrl = paramUrl.replace(/ /g, '-');
         const newUrl = url + "/" + paramUrl;
         history.pushState({}, null, newUrl);
         //let searchParam = new URLSearchParams();
@@ -135,9 +121,10 @@ class Article {
          */
         const urlOfArticle = window.location.origin + window.location.pathname;
         if (urlOfArticle === newUrl){
-            document.title = "Orinoco - appareil photo " + article.name;
+            changeMetaTitle("Orinoco - appareil photo " + article.name);
+            changeTitleContentOfPage("Decouvrez le " + article.name);
+
             document.querySelector(".second-div").classList.remove("display-none");
-            document.querySelector("#title").textContent = "Découvrez le " + article.name;
             document.querySelector(".second-div").innerHTML += `
             <div id="article-unique">
                 <div class="card border-0 m-auto col-10 flex-lg-row col-lg-12">
@@ -155,7 +142,7 @@ class Article {
                                     <label for="select-lense"></label>
                                     <select required id="select-lense" name"lense" type="select" class="form-select">
                                         <option value=""> > Choisissez une option </option>
-                                        ${Article.showOptions(article.lenses)}
+                                        ${showOptions(article.lenses)}
                                     </select>
                                 </div>
                                 <div class="d-flex flex-column align-items-center justify-content-center m-3">
@@ -185,9 +172,9 @@ class Article {
             const btn = document.querySelector("#add-to-cart-btn");
             const numberOfItemsToAddToCart = document.querySelector("#select-number-of-items-to-add-to-cart");
             btn.addEventListener("click", () => {
-                const lense = Cart.getSelectionnedLense("select-lense");
+                const lense = getSelectionnedLense("select-lense");
                 const revertFormatedPrice = article.price.replace(",",".") * 1000;
-                Article.getElementToAddToCart(
+                getElementToAddToCart(
                     article.id+lense,
                     article.id,
                     article.name,
