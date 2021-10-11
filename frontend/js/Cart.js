@@ -4,7 +4,7 @@ function getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd) 
     const errorMessage = document.querySelector("#alert-message");
     errorMessage.classList.remove("alert", "alert-warning");
     errorMessage.textContent = "";
-    if(elt && id && name && lense && price && numberOfItemsToAdd) {
+    if (elt && id && name && lense && price && numberOfItemsToAdd) {
         const itemToAddToCart = {"elementIdentifier" : elt, id, "produit" : name, "objectif" : lense, "prix" : price, "quantite" : numberOfItemsToAdd};
         addItemToCart(itemToAddToCart);
         errorMessage.classList.add("alert", "alert-success");
@@ -55,7 +55,7 @@ function addItemToCart(item) {
 
  function numberOfItemsInCart() {
     const panier = JSON.parse(localStorage.getItem("Panier"));
-    if (panier !== null && panier.length > 0){
+    if (panier !== null && panier.length > 0) {
         const tabOfItemsInCart = [];
         panier.map(el => {
             tabOfItemsInCart.push(parseInt(el.quantite));
