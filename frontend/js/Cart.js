@@ -20,16 +20,18 @@ function addItemToCart(item) {
     let cart = [];
     if (localStorage.getItem("Panier")) {
         const uniqueIdentifierOfArticleToAdd = item.elementIdentifier;
-        const articlesInCart = JSON.parse(localStorage.getItem("Panier"));
+        let articlesInCart = JSON.parse(localStorage.getItem("Panier"));
         cart.push(...articlesInCart);
  
         // Si l'article est déjà présent au sein du panier
         // (vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément)
             if (cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd)) {
                 const itemToRemove = cart.findIndex(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd);
-                cart.map(i => {
-                    if (i.elementIdentifier === uniqueIdentifierOfArticleToAdd) {
-                        const previousQuantity = i.quantite;
+                cart.map(element => {
+                    if (element.elementIdentifier === uniqueIdentifierOfArticleToAdd) {
+                        console.log(element);
+                        //console.log(itemToRemove);
+                        const previousQuantity = element.quantite;
                         const nouvelleQuantite = previousQuantity + item.quantite;
                         const elementIdentifier = item.id + item.objectif;
                         const panierModifie = {elementIdentifier, "id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : nouvelleQuantite};
@@ -51,9 +53,29 @@ function addItemToCart(item) {
         localStorage.setItem("Panier", JSON.stringify(cart));
         numberOfItemsInCart();
     }
- };
+};
 
- function numberOfItemsInCart() {
+function removeItemInCart(key) {
+    let cart = [];
+    let localCart = JSON.parse(localStorage.getItem("Panier"));
+    
+    if (localStorage.getItem("Panier") && localStorage.getItem("Panier").length > 1) {
+        cart.push(...localCart);
+        let itemToRemove = cart.filter(el => el.elementIdentifier !== key);
+        console.log(itemToRemove);
+        localStorage.setItem("Panier", JSON.stringify(itemToRemove));
+        modalBody.innerHTML = "";
+        showCart();
+        numberOfItemsInCart();
+    } else if (localCart.length <= 1) {
+        localStorage.removeItem("Panier");
+        modalBody.innerHTML = " ";
+        showCart();
+        numberOfItemsInCart();
+    }
+};
+
+function numberOfItemsInCart() {
     const panier = JSON.parse(localStorage.getItem("Panier"));
     if (panier !== null && panier.length > 0) {
         const tabOfItemsInCart = [];
@@ -64,8 +86,133 @@ function addItemToCart(item) {
             document.querySelector("#total-number-in-cart-container").classList.remove("display-none");
             document.querySelector("#total-number-in-cart").textContent = totalOfItemsInCart;
     } else {
-        //console.log("Le panier est vide.");
         document.querySelector("#total-number-in-cart").textContent = "";
         document.querySelector("#total-number-in-cart-container").classList.add("display-none");
     }
- };
+};
+
+function showCart() {
+    const currentCart = JSON.parse(localStorage.getItem("Panier"));
+
+    if (currentCart && currentCart.length >= 1) {
+        const modalBody = document.querySelector(".modal-body");
+        modalBody.classList.add("px-md-5")
+        const cartListContainer = document.createElement("div");
+        const tableCartContainer = document.createElement("table");
+        const tableHead = document.createElement("thead");
+        const tableBody = document.createElement("tbody");
+
+        let total = [];
+        cartListContainer.classList.add("table-responsive");
+        tableCartContainer.classList.add("table", "align-middle", "p-3");
+        
+        tableHead.classList.add("table-light");
+        tableHead.innerHTML = `
+            <tr class="text-center">
+                <th scope="col">Article</th>
+                <th class="max-width-50" scope="col">Qté</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Total</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        `;
+
+        currentCart.map( el => {
+            let sousTotal = el.quantite * el.prix;
+            let title = `<div><b>${el.produit}</b></div><div><span><i>Objectif ${el.objectif}</i></span></div>`;
+            total.push(sousTotal);
+            tableBody.innerHTML += 
+        `
+            <tr class="text-center">
+                <td>${title}</td>
+                <td class="max-width-50">
+                    <span class="mx-1">${el.quantite}</span>
+                </td>
+                <td>${el.prix / 1000}0€</td>
+                <td>${sousTotal / 1000}0€</td>
+                <td><span id="delete-article" data-uid="${el.elementIdentifier}">X</span></td>
+            </tr>
+            `
+        });
+        totalPrice = total.reduce((previousValue, currentValue) => previousValue + currentValue);
+
+        tableCartContainer.append(tableHead);
+        tableCartContainer.append(tableBody);
+        cartListContainer.append(tableCartContainer);
+        const div = document.createElement("div");
+        cartListContainer.append(div);
+        div.classList.add("container", "text-end", "main-font-family", "nav-link");
+        div.innerHTML += ` 
+            <p class="fs-3 mt-3">
+                TOTAL = ${totalPrice / 1000}0€
+            </p>`
+        ;
+
+        modalBody.append(cartListContainer);
+        const div2 = document.createElement("div");
+        cartListContainer.append(div2);
+        div2.classList.add("container", "form-container");
+        createCommandForm(div2);
+
+        const linksToDeleteArticle = document.querySelectorAll("#delete-article");
+        for (let linkToDeleteArticle of linksToDeleteArticle) {
+            linkToDeleteArticle.addEventListener("click", function(e) {
+                e.preventDefault();
+                const uid = this.dataset.uid;
+                removeItemInCart(uid);
+                //console.log(this.dataset.uid);
+            });
+        };
+        
+    } else {
+        const emptyCartTextConatiner = document.createElement("h3");
+        emptyCartTextConatiner.textContent = "Votre panier est vide !";
+        emptyCartTextConatiner.classList.add("text-center", "mt-5");
+        modalBody.append(emptyCartTextConatiner);
+    };
+};
+
+function createCommandForm(element) {
+    element.innerHTML += `
+    <h3 class="text-center mb-4" id="form-title">Veuillez remplir ce formulaire pour confirmer votre commande :</h3>
+    <form class="row g-3 needs-validation">
+
+        <div class="col-md-6 has-validation">
+            <label for="prenom" class="form-label">Prénom</label>
+            <input type="text" id="prenom" class="form-control" placeholder="Prénom" aria-label="Prénom" aria-describedby="form-title" required>
+        </div>
+        <div class="col-md-6 has-validation">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" id="nom" class="form-control" placeholder="Nom" aria-label="Nom" aria-describedby="form-title" required>
+        </div>
+        <div class="col-md-12 has-validation">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="emailHelp" required>
+        </div>
+        <div id="emailHelp" class="form-text mb-3">Comme pour toutes vos informations, nous utilisons votre email pour le traitement de votre commande, nous ne la partageons pas.</div>
+
+
+        <div class="text-center">VOTRE ADRESSE</div>
+        <div class="col-md-6 has-validation">
+            <label for="numero-rue" class="form-label">N° de rue</label>
+            <input type="text" id="numero-rue" class="form-control input-md" placeholder="123" aria-label="N° de rue" aria-describedby="form-title" required>
+        </div>
+        <div class="col-md-6">
+            <label for="complement" class="form-label">Complément d'adresse</label>
+            <input type="text" id="complement" class="form-control" placeholder="appartement, bâtiment, étage..." aria-label="Complément d'adresse" aria-describedby="form-title">
+        </div>
+        <div class="col-md-6 has-validation">
+            <label for="code-postal" class="form-label">Code postal</label>
+            <input type="text" id="code-postal" class="form-control" aria-label="Complément d'adresse" aria-describedby="form-title" required>
+        </div>
+        <div class="col-md-6 mb-3 has-validation">
+            <label for="ville" class="form-label">Ville</label>
+            <input type="text" id="ville" class="form-control" aria-label="Complément d'adresse" aria-describedby="form-title" required>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" id="commandFormBtn" class="btn btn-lg main-background-color">Envoyer</button>
+        </div>
+    </form>
+    `;
+};

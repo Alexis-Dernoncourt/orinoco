@@ -8,19 +8,13 @@ class Article {
         jsonArticle && Object.assign(this, jsonArticle);
     };
 
-    static getFormatedPrice(price) {
-        const formatedPrice = price / 1000 + "0";
-        const newFormatedPrice = formatedPrice.replace(".",",");
-        return newFormatedPrice;
-    };
-
     getAllArticles() {
         fetch("http://localhost:3000/api/cameras")
             .then( data => data.json())
             .then(jsonListArticle => {
                 let tabOfArticles = [];
                 for (let jsonArticle of jsonListArticle) {
-                    let article = new Article(jsonArticle);
+                    const article = new Article(jsonArticle);
 
                     document.querySelector(".main-div").innerHTML += `
                     <a  id="linkToArticle"
@@ -35,7 +29,7 @@ class Article {
                                 <img src="${article.imageUrl}" class="card-img-top" />
                             <div class="card-body">
                                 <p class="card-text text-center p-md-4">${article.description}</p>
-                                <p class="card-text text-center fw-bold fs-3 main-font-family">${Article.getFormatedPrice(article.price)}<sup>€</sup></p>
+                                <p class="card-text text-center fw-bold fs-3 main-font-family">${getFormatedPrice(article.price)}<sup>€</sup></p>
                                 <p class="text-end card-link">
                                     Voir l'article
                                 </p>
@@ -47,11 +41,10 @@ class Article {
                     changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
                     
                     tabOfArticles.push(article);
-                    //console.log(tabOfArticles);
                     
                     const linksToArticle = document.querySelectorAll("#linkToArticle");
-                    for (let i of linksToArticle) {
-                        i.addEventListener("click", function(e) {
+                    for (let link of linksToArticle) {
+                        link.addEventListener("click", function(e) {
                             e.preventDefault();
                             const articleToView = tabOfArticles.find(element => element._id === this.dataset.id);
                             localStorage.setItem(articleToView._id, JSON.stringify(articleToView));
@@ -73,7 +66,7 @@ class Article {
         const pathnameOrigin = "/frontend/view/index.html";
         let paramUrl = article._id;
         const newUrl = url + pathnameOrigin + "/" + paramUrl;
-        history.pushState(null, null, newUrl);
+        history.pushState({}, null, newUrl);
 
         // Cache la liste des articles sur la homepage :
         const divToHide = document.querySelector(".main-div");
@@ -96,7 +89,7 @@ class Article {
                         </div>
                         <div>
                             <p class="card-text text-center p-4">${article.description}</p>
-                            <p class="card-text text-center fw-bold fs-3 main-font-family">${Article.getFormatedPrice(article.price)}<sup>€</sup></p>
+                            <p class="card-text text-center fw-bold fs-3 main-font-family">${getFormatedPrice(article.price)}<sup>€</sup></p>
                             
                             <div class="d-flex flex-column align-items-center">
                                 <div class="d-block m-3">
@@ -145,19 +138,14 @@ class Article {
             });
     
 
-            // Gestion des boutons de navigation
+            // Gestion des boutons vers homepage
             const backHome = document.querySelectorAll("a[data-link=home]");
-            const cartBtn = document.querySelector("a[data-link=cart]");
 
             backHome.forEach(element => {
                 element.addEventListener("click", (e) => {
                     e.preventDefault(); 
                     backToHome();
                 });
-            });
-            cartBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                goToCart();
             });
         };
     };

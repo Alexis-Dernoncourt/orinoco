@@ -24,6 +24,10 @@ body {
     font-family: 'Belligerent-Madness' !important;
 }
 
+.max-width-50 {
+    max-width: 50px;
+}
+
 /* MAIN MENU */
 .nav-link {
     font-size: 1.2rem;
@@ -64,6 +68,11 @@ body {
     background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
 }
 
+.modal-header {
+    background: rgb(143,91,251);
+    background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
+}
+
 .bg-title-cards-home > a {
     color: #fff;
     text-decoration: none;
@@ -96,6 +105,16 @@ body {
     color: #000;
     font-weight: bold;
     transition: all ease-in .2s;
+}
+
+/* PAGE PANIER*/
+#delete-article {
+    cursor: pointer;
+    font-weight: bold;
+    color: crimson;
+}
+#delete-article:hover {
+    font-size: 1.2rem;
 }
 
 /* -------------------- */

@@ -5,11 +5,9 @@ function backToHome() {
 
    const divToHide = document.querySelector(".second-div");
    const divToShow = document.querySelector(".main-div");
-
    deleteSavedItem();
-
-   document.querySelector("#title").textContent = "Découvrez tous nos appareils photo";
-   document.title = "Orinoco - Découvrez tous nos appareils photo";
+   changeTitleContentOfPage("Découvrez tous nos appareils photo");
+   changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
 
    if (window.location.pathname === homeUrl) {
       divToHide.classList.add("display-none");
@@ -23,13 +21,6 @@ function backToHome() {
    }
 };
 
-function goToCart() {
-   const cartUrl = "/frontend/view/panier.html";
-   const putCartUrl = window.location.origin + cartUrl;
-   window.location.href = putCartUrl;
-   history.pushState({}, null, cartUrl);
-};
-
 function getIdInUrl() {
    const tabUrl = window.location.pathname.split("/");
    const lastIndexInTabUrl = tabUrl.length - 1;
@@ -40,6 +31,12 @@ function getIdInUrl() {
 function deleteSavedItem() {
    const id = getIdInUrl();
    localStorage.removeItem(id);
+};
+
+function getFormatedPrice(price) {
+   const formatedPrice = price / 1000 + "0";
+   const newFormatedPrice = formatedPrice.replace(".",",");
+   return newFormatedPrice;
 };
 
 // Récupère et retourne les options de choix de la lentille variables pour l'élément input type select
