@@ -1,37 +1,39 @@
+function goToHomeBtns() {
+   // Gestion des boutons vers homepage
+   const backHome = document.querySelectorAll("#home-btn");
+   backHome.forEach(element => {
+      element.addEventListener("click", function(e) {
+         e.stopPropagation();
+         e.preventDefault();
+         backToHome();
+      });
+   });
+};
+
 function backToHome() {
    // Modification de l'url
    const homeUrl = "/frontend/view/index.html";
-   const articleContainer = document.querySelector("#article-unique");
-
+   history.pushState(null, null, homeUrl);
    const divToHide = document.querySelector(".second-div");
    const divToShow = document.querySelector(".main-div");
-   deleteSavedItem();
+   const cartContainer = document.querySelector(".cart-body");
    changeTitleContentOfPage("Découvrez tous nos appareils photo");
    changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
-
-   if (window.location.pathname === homeUrl) {
-      divToHide.classList.add("display-none");
-      divToShow.classList.remove("display-none");
-   } 
-   else {
-      history.pushState({}, null, homeUrl);
-      articleContainer.remove();
-      divToHide.classList.add("display-none");
-      divToShow.classList.remove("display-none");
-   }
+   if (cartContainer) {cartContainer.remove()};
+   divToHide.classList.add("d-none");
+   divToShow.classList.remove("d-none");
 };
 
 function getIdInUrl() {
-   const tabUrl = window.location.pathname.split("/");
-   const lastIndexInTabUrl = tabUrl.length - 1;
-   let id = tabUrl[lastIndexInTabUrl];
-   return id;
+   return new URL(location.href).searchParams.get("id");
 };
 
-function deleteSavedItem() {
-   const id = getIdInUrl();
-   localStorage.removeItem(id);
-};
+// function deleteSavedItem() {
+//    let id = getIdInUrl();
+//    if(id) {
+//       localStorage.removeItem(id);
+//    }
+// };
 
 function getFormatedPrice(price) {
    const formatedPrice = price / 1000 + "0";

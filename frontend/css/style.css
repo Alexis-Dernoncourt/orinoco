@@ -9,10 +9,6 @@
 }
 
 /* GENERAL */
-.display-none {
-    display: none !important;
-}
-
 body {
     display: flex;
     flex-direction: column;
@@ -26,6 +22,10 @@ body {
 
 .max-width-50 {
     max-width: 50px;
+}
+
+.min-height-50vh {
+    min-height: 50vh !important;
 }
 
 /* MAIN MENU */
@@ -112,9 +112,13 @@ body {
     cursor: pointer;
     font-weight: bold;
     color: crimson;
+    font-size: 1rem;
+    transition: font-size .1s;
+    
 }
 #delete-article:hover {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    transition: font-size .1s;
 }
 
 /* -------------------- */
