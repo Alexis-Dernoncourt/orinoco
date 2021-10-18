@@ -97,8 +97,8 @@ function showCart() {
     const mainDiv = document.querySelector("#main-container");
     const allArticles = document.querySelector(".main-div");
     const secondDiv = document.querySelector(".second-div");
-    if (secondDiv) {secondDiv.classList.add("d-none")};
-    if (allArticles) {allArticles.classList.add("d-none")};
+    secondDiv && secondDiv.classList.add("d-none");
+    allArticles && allArticles.classList.add("d-none");
 
     const cartBody = document.createElement("div");
     cartBody.classList.add("px-md-5", "cart-body", "min-height-50vh");
@@ -190,15 +190,18 @@ function createCommandForm(element) {
 
         <div class="col-md-6 has-validation">
             <label for="prenom" class="form-label">Prénom</label>
-            <input type="text" id="prenom" name="prenom" class="form-control" placeholder="Prénom" aria-label="Prénom" aria-describedby="form-title" />
+            <input type="text" id="prenom" name="prenom" class="form-control border-2" placeholder="Prénom" aria-label="Prénom" aria-describedby="form-title" />
+            <span id="alert-invalid-firstname"></span>
         </div>
         <div class="col-md-6 has-validation">
             <label for="nom" class="form-label">Nom</label>
-            <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom" aria-label="Nom" aria-describedby="form-title" />
+            <input type="text" id="nom" name="nom" class="form-control border-2" placeholder="Nom" aria-label="Nom" aria-describedby="form-title" />
+            <span id="alert-invalid-lastname"></span>
         </div>
         <div class="col-md-12 has-validation">
             <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="emailHelp" />
+            <input type="email" id="email" name="email" class="form-control border-2" placeholder="Email" aria-label="Email" aria-describedby="emailHelp" />
+            <span id="alert-invalid-email"></span>
         </div>
         <div id="emailHelp" class="form-text mb-3">Comme pour toutes vos informations, nous utilisons votre email pour le traitement de votre commande, nous ne la partageons pas.</div>
 
@@ -206,36 +209,32 @@ function createCommandForm(element) {
         <div class="text-center">VOTRE ADRESSE</div>
         <div class="col-md-6 has-validation">
             <label for="numero-rue" class="form-label">Numéro et nom de rue</label>
-            <input type="text" id="numero-rue" name="numero-rue" class="form-control input-md" placeholder="123 rue de ma ville" aria-label="Numéro et nom de rue" aria-describedby="form-title" />
+            <input type="text" id="numero-rue" name="numero-rue" class="form-control border-2 input-md" placeholder="123 rue de ma ville" aria-label="Numéro et nom de rue" aria-describedby="form-title" />
+            <span id="alert-invalid-street-number-and-name"></span>
         </div>
         <div class="col-md-6">
             <label for="complement" class="form-label">Complément d'adresse</label>
-            <input type="text" id="complement" name="complement-adresse" class="form-control" placeholder="appartement, bâtiment, étage..." aria-label="Complément d'adresse" aria-describedby="form-title" />
+            <input type="text" id="complement" name="complement-adresse" class="form-control border-2" placeholder="appartement, bâtiment, étage..." aria-label="Complément d'adresse" aria-describedby="form-title" />
+            <span id="alert-invalid-adress-complement"></span>
         </div>
         <div class="col-md-6 has-validation">
             <label for="code-postal" class="form-label">Code postal</label>
-            <input type="text" id="code-postal" name="code-postal" class="form-control" aria-label="Code postal" aria-describedby="form-title" />
+            <input type="text" id="code-postal" name="code-postal" class="form-control border-2" aria-label="Code postal" aria-describedby="form-title" />
+            <span id="alert-invalid-zip-code"></span>
         </div>
         <div class="col-md-6 mb-3 has-validation">
             <label for="ville" class="form-label">Ville</label>
-            <input type="text" id="ville" name="ville" class="form-control" aria-label="Ville" aria-describedby="form-title" />
+            <input type="text" id="ville" name="ville" class="form-control border-2" aria-label="Ville" aria-describedby="form-title" />
+            <span id="alert-invalid-city"></span>
         </div>
 
         <div class="d-grid gap-2">
-            <button type="submit" id="commandFormBtn" class="btn btn-lg main-background-color">Envoyer</button>
+            <button type="submit" id="commandFormBtn" class="btn btn-lg main-background-color disabled">Envoyer</button>
         </div>
     </form>
     `;
 
-    const form = document.querySelector("#form-validation");
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        cartFormValidation();
-    });
-};
-
-function cartFormValidation() {
-    //const form = document.querySelector("#form-validation")
+    //Select inputs
     const firstname = document.querySelector("#prenom");
     const lastname = document.querySelector("#nom");
     const email = document.querySelector("#email");
@@ -244,30 +243,134 @@ function cartFormValidation() {
     const zipCode = document.querySelector("#code-postal");
     const city = document.querySelector("#ville");
 
-    //faire traitement formulaire (via regex etc)
-    const formValues = {"prenom" : firstname.value,
-                        "nom" : lastname.value,
-                        "email" : email.value,
-                        "numero-rue" : streetNumberAndName.value,
-                        "complement-adresse" : adressComplement.value,
-                        "code-postal" : zipCode.value,
-                        "ville" : city.value,
-                        };
-    console.log(formValues);
+    //RegEx :
+    const nameMatch = new RegExp("^[a-zA-Z- .'\-]+$", "i");
+    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&'*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
+    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .'/\-]{4,}", "ig");
+    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,âéèéêëÉ'/\-]+$", "ig");
+    const zipCodeMatch = new RegExp("^[0-9]{5}$", "g");
+    const cityMatch = new RegExp("^[a-zA-Z- .'/\-]+$", "ig");
 
-    const cartToSend = JSON.parse(localStorage.getItem("Panier"));
-    console.log(cartToSend);
+    regexInputValidation(firstname, nameMatch, "#alert-invalid-firstname", "*Veuillez saisir un prénom valide (exemple: jean ou Jean ou Jean-Louis ou Jean Louis). N'entrez pas de chiffres ni de caractère spécial du type <>*$#/...");
+    regexInputValidation(lastname, nameMatch, "#alert-invalid-lastname", "*Veuillez saisir un nom valide (pas de chiffres ni de caractère spécial du type <>*$#/...).");
+    regexInputValidation(email, mailMatch, "#alert-invalid-email", "*Veuillez saisir une adresse email valide (exemple: jean@mail.com).");
+    regexInputValidation(streetNumberAndName, streetNumberAndNameMatch, "#alert-invalid-street-number-and-name", "*Veuillez saisir une adresse valide (exemple: 12 rue de Paris");
+    regexInputValidation(adressComplement, adressComplementMatch, "#alert-invalid-adress-complement", "*Votre complément d'adresse ne semble pas valide (appartement A, 2ème étage...)");
+    regexInputValidation(zipCode, zipCodeMatch, "#alert-invalid-zip-code", "*Veuillez saisir un code postal valide (comportant 5 chiffres - Exemple: 75012).");
+    regexInputValidation(city, cityMatch, "#alert-invalid-city", "*Veuillez saisir un nom de ville valide.");
 
-    let randomNumber = Math.round(Math.random() * 1000000000);
-    const orderId = randomNumber.toString();
-    console.log(orderId); // order id renvoyé par backend ??
+    const form = document.querySelector("#form-validation");
+    form.addEventListener("change", function() {
+        if (firstname.hasAttribute("data-valid") && lastname.hasAttribute("data-valid") && email.hasAttribute("data-valid") && streetNumberAndName.hasAttribute("data-valid") && zipCode.hasAttribute("data-valid") && city.hasAttribute("data-valid")) {
+            const commandFormBtn = document.querySelector("#commandFormBtn");
+            commandFormBtn.classList.contains("disabled") && commandFormBtn.classList.remove("disabled");
+        } else {
+            commandFormBtn.classList.add("disabled");
+        }
+    });
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        cartFormSend();
+    });
+};
+
+function regexInputValidation(input, regexCondition, spanAlertSelector, spanAlertTextContent) {
+    input.addEventListener("change", function() {
+        const invalidMessageAlert = document.querySelector(spanAlertSelector);
+        const commandFormBtn = document.querySelector("#commandFormBtn");
+        if (input.value !== "") {
+            if (input.value !== "" && regexCondition.test(input.value.trim())) {
+                input.classList.contains("border-danger") && input.classList.remove("border-danger");
+                input.classList.add("border-success");
+                input.setAttribute("data-valid", "true");
+                invalidMessageAlert.innerHTML = "";
+            } else if (input.value !== "" && !regexCondition.test(input.value.trim())) {
+                input.hasAttribute("data-valid") && input.removeAttribute("data-valid");
+                invalidMessageAlert.innerHTML = `<small class='text-danger mx-4'>${spanAlertTextContent}</small>`;
+                input.classList.contains("border-success") && input.classList.remove("border-success");
+                input.classList.add("border-danger");
+                !commandFormBtn.hasAttribute("data-valid") && commandFormBtn.classList.add("disabled");
+            }
+        } else {
+            input.classList.contains("border-danger") && input.classList.remove("border-danger");
+            input.classList.contains("border-success") && input.classList.remove("border-success");
+            invalidMessageAlert.innerHTML = "";
+            input.hasAttribute("data-valid") && input.removeAttribute("data-valid");
+            !commandFormBtn.hasAttribute("data-valid") && commandFormBtn.classList.add("disabled");
+        }
+    });
+}
+
+function cartFormSend() {
+    const form = document.querySelector("#form-validation")
+    //Select inputs
+    const firstname = document.querySelector("#prenom");
+    const lastname = document.querySelector("#nom");
+    const email = document.querySelector("#email");
+    const streetNumberAndName = document.querySelector("#numero-rue");
+    const adressComplement = document.querySelector("#complement");
+    const zipCode = document.querySelector("#code-postal");
+    const city = document.querySelector("#ville");
     
-    // fetch("http://localhost:3000/api/cameras/order",{   method: "POST",
-    //                                                     body: JSON.stringify({
-    //                                                                  formValues,
-    //                                                                  cartToSend,
-    //                                                                  orderId
-    //                                                            })
-    //                                                 })
-    // .then()
+    if (firstname.value !== "" && lastname.value !== "" && email.value !== "" && streetNumberAndName.value !== "" && zipCode.value !== "" && city.value !== "") {
+        const contact = {"firstName" : firstname.value,
+                            "lastName" : lastname.value,
+                            "address" : streetNumberAndName.value + " - " + adressComplement.value,
+                            "city" : `${parseInt(zipCode.value)}  ${city.value}`,
+                            "email" : email.value
+                            };
+        const jsonProducts = JSON.parse(localStorage.getItem("Panier"));
+        let products = [];
+        jsonProducts.map(elt => {
+            let elementId = elt.id;
+            products.push(elementId);
+        });
+        
+        fetch("http://localhost:3000/api/cameras/order",
+            {   method: "POST",
+                headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({contact: contact,
+                    products: products})
+        })
+        .then(function(res) {
+            if (res.ok) {
+                return res.json()
+            }
+        })
+        .then(data =>{ 
+            localStorage.removeItem("Panier");
+            showCommandConfirmation(data);
+        })
+        .catch(err => console.log(err))
+    };
+};
+
+function showCommandConfirmation(data) {
+    numberOfItemsInCart();
+    changeTitleContentOfPage("Confirmation de votre commande ! 👍");
+    changeMetaTitle("Orinoco - Confirmation de votre commande");
+
+    const mainContainer = document.querySelector("#main-container");
+    const cartBody = document.querySelector(".cart-body");
+    cartBody && cartBody.remove();
+
+    const confirmationContainer = document.createElement("div");
+    confirmationContainer.classList.add("px-md-5", "confirmation-body", "min-height-50vh");
+
+    confirmationContainer.innerHTML = `
+        <div class="container text-center">
+            <h2>Nous avons bien reçu votre commande !</h2>
+            <p class="fs-4 pb-5">Vous recevrez bientôt un mail de confirmation avec le détail de votre commande passée chez Orinoco !</p>
+            <p class="fs-4 mt-4 w-100 py-4 confirm-bg text-white text-uppercase">Veuillez noter votre numéro de commande :</p>
+            <p class="text-primary fs-3 my-3">${data.orderId}</p>
+            <p class="fs-4">Merci ${data.contact.firstName} ! 😊</p>
+        </div>
+    `;
+
+    mainContainer.append(confirmationContainer);
+    history.pushState(null, null, "?page=comfirmation");
 };

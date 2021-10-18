@@ -68,11 +68,6 @@ body {
     background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
 }
 
-.modal-header {
-    background: rgb(143,91,251);
-    background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
-}
-
 .bg-title-cards-home > a {
     color: #fff;
     text-decoration: none;
@@ -121,7 +116,12 @@ body {
     transition: font-size .1s;
 }
 
-/* -------------------- */
+.confirm-bg {
+    background: rgb(143,91,251);
+    background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
+}
+
+/* ------------MEDIA QUERY-------- */
 
 @media screen and (max-width: 991px) {
     .img-page-article {

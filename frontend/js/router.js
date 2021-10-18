@@ -1,3 +1,5 @@
+const localURLorigin = "http://127.0.0.1:5500";
+
 class Router {
     constructor(url, element) {
         this.url = url;
@@ -8,6 +10,8 @@ class Router {
         const pageParam = new URL(location).searchParams.get("page");
         if (pageParam) {
             return pageParam;
+        } else {
+            return false;
         }
     };
 
@@ -17,22 +21,24 @@ class Router {
         cartBtn.addEventListener("click", function(e) {
             e.preventDefault();
             const cartContainer = document.querySelector(".cart-body");
-            if (cartContainer) {cartContainer.remove()};
+            cartContainer && cartContainer.remove();
             showCart();
         });
     }
     
     getPage(element) {
-        const homeUrl = "http://127.0.0.1:5500/frontend/view/index.html";
+        const homeUrl = `${localURLorigin}/frontend/view/index.html`;
         const mainDiv = document.querySelector(".main-div");
         const secondDiv = document.querySelector(".second-div");
         const cartContainer = document.querySelector(".cart-body");
+        const confirmationContainer = document.querySelector(".confirmation-body");
 
         if (!getIdInUrl() && location.href === homeUrl) {
             console.log("Page d'accueil");
             mainDiv.classList.remove("d-none");
             secondDiv.classList.add("d-none");
-            if (cartContainer) {cartContainer.remove()};
+            cartContainer && cartContainer.remove();
+            confirmationContainer && confirmationContainer.remove();
             history.pushState(null, null, homeUrl);
             element.getAllArticles();
             this.getCart();
@@ -43,8 +49,8 @@ class Router {
             history.pushState(null, null, `${homeUrl}?id=${id}`);
             mainDiv.classList.add("d-none");
             secondDiv.classList.remove("d-none");
-            if (cartContainer) {cartContainer.remove()};
-            if (cartContainer) {cartContainer.classList.add("d-none")};
+            cartContainer && cartContainer.remove();
+            cartContainer && cartContainer.classList.add("d-none");
             element.getAllArticles();
             element.getArticleById2(id);
             this.getCart();
@@ -57,6 +63,11 @@ class Router {
                 console.log("Page panier !");
                 showCart();
                 history.pushState(null, null, location.pathname + "?page=panier");
+            } else if (this.getPageParam() === "confirmation") {
+                changeTitleContentOfPage("Votre panier");
+                changeMetaTitle("Orinoco - votre panier");
+                console.log("Confirmation de la commande.");
+                history.pushState(null, null, location.pathname + "?page=confirmation");
             } else {
                 console.log("page introuvable");
                 // Redirige vers homepage
@@ -64,7 +75,7 @@ class Router {
                 element.getAllArticles();
                 history.pushState(null, null, homeUrl);
                 cartContainer.remove();
-                if (cartContainer) {cartContainer.classList.add("d-none")};
+                cartContainer && cartContainer.classList.add("d-none");
                 this.getCart();
             }
         }
