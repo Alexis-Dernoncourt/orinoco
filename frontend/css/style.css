@@ -9,10 +9,6 @@
 }
 
 /* GENERAL */
-.display-none {
-    display: none !important;
-}
-
 body {
     display: flex;
     flex-direction: column;
@@ -22,6 +18,14 @@ body {
 
 .main-font-family {
     font-family: 'Belligerent-Madness' !important;
+}
+
+.max-width-50 {
+    max-width: 50px;
+}
+
+.min-height-50vh {
+    min-height: 50vh !important;
 }
 
 /* MAIN MENU */
@@ -98,7 +102,26 @@ body {
     transition: all ease-in .2s;
 }
 
-/* -------------------- */
+/* PAGE PANIER*/
+#delete-article {
+    cursor: pointer;
+    font-weight: bold;
+    color: crimson;
+    font-size: 1rem;
+    transition: font-size .1s;
+    
+}
+#delete-article:hover {
+    font-size: 1.3rem;
+    transition: font-size .1s;
+}
+
+.confirm-bg {
+    background: rgb(143,91,251);
+    background: linear-gradient(280deg, rgba(143,91,251,1) 0%, rgba(191,116,118,1) 100%);
+}
+
+/* ------------MEDIA QUERY-------- */
 
 @media screen and (max-width: 991px) {
     .img-page-article {
