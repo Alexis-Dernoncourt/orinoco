@@ -1,4 +1,3 @@
-console.log('Index is running.');
 // Récupération de tous les articles et formatage/injection du contenu sur la homepage
 let article = new Article();
 let url = new URL(window.location);

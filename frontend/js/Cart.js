@@ -76,10 +76,7 @@ function removeItemInCart(key) {
 function numberOfItemsInCart() {
     const panier = JSON.parse(localStorage.getItem("Panier"));
     if (panier !== null && panier.length > 0) {
-        const tabOfItemsInCart = [];
-        panier.map(el => {
-            tabOfItemsInCart.push(parseInt(el.quantite));
-        });
+        const tabOfItemsInCart = panier.map(el => parseInt(el.quantite));
         const totalOfItemsInCart = tabOfItemsInCart.reduce((previousValue, currentValue) => previousValue + currentValue);
             document.querySelector("#total-number-in-cart-container").classList.remove("d-none");
             document.querySelector("#total-number-in-cart").textContent = totalOfItemsInCart;
@@ -125,7 +122,7 @@ function showCart() {
             </tr>
         `;
 
-        currentCart.map( el => {
+        currentCart.forEach( el => {
             let sousTotal = el.quantite * el.prix;
             let title = `<div><b>${el.produit}</b></div><div><span><i>Objectif ${el.objectif}</i></span></div>`;
             total.push(sousTotal);
@@ -176,7 +173,7 @@ function showCart() {
     } else {
         mainDiv.appendChild(cartBody);
         const emptyCartTextContainer = document.createElement("h3");
-        emptyCartTextContainer.textContent = "Votre panier est vide !";
+        emptyCartTextContainer.textContent = "Votre panier est vide 😕";
         emptyCartTextContainer.classList.add("text-center", "mt-5");
         cartBody.append(emptyCartTextContainer);
         mainDiv.append(cartBody);
@@ -188,17 +185,17 @@ function createCommandForm(element) {
     <h3 class="text-center mb-4" id="form-title">Veuillez remplir ce formulaire pour confirmer votre commande :</h3>
     <form class="row g-3" id="form-validation">
 
-        <div class="col-md-6 has-validation">
+        <div class="col-md-6">
             <label for="prenom" class="form-label">Prénom</label>
             <input type="text" id="prenom" name="prenom" class="form-control border-2" placeholder="Prénom" aria-label="Prénom" aria-describedby="form-title" />
             <span id="alert-invalid-firstname"></span>
         </div>
-        <div class="col-md-6 has-validation">
+        <div class="col-md-6">
             <label for="nom" class="form-label">Nom</label>
             <input type="text" id="nom" name="nom" class="form-control border-2" placeholder="Nom" aria-label="Nom" aria-describedby="form-title" />
             <span id="alert-invalid-lastname"></span>
         </div>
-        <div class="col-md-12 has-validation">
+        <div class="col-md-12">
             <label for="email" class="form-label">Email</label>
             <input type="email" id="email" name="email" class="form-control border-2" placeholder="Email" aria-label="Email" aria-describedby="emailHelp" />
             <span id="alert-invalid-email"></span>
@@ -207,22 +204,22 @@ function createCommandForm(element) {
 
 
         <div class="text-center">VOTRE ADRESSE</div>
-        <div class="col-md-6 has-validation">
+        <div class="col-md-6">
             <label for="numero-rue" class="form-label">Numéro et nom de rue</label>
             <input type="text" id="numero-rue" name="numero-rue" class="form-control border-2 input-md" placeholder="123 rue de ma ville" aria-label="Numéro et nom de rue" aria-describedby="form-title" />
             <span id="alert-invalid-street-number-and-name"></span>
         </div>
         <div class="col-md-6">
             <label for="complement" class="form-label">Complément d'adresse</label>
-            <input type="text" id="complement" name="complement-adresse" class="form-control border-2" placeholder="appartement, bâtiment, étage..." aria-label="Complément d'adresse" aria-describedby="form-title" />
+            <input type="text" id="complement" name="complement-adresse" class="form-control border-2" placeholder="appartement 101, bâtiment A, 2ème étage..." aria-label="Complément d'adresse" aria-describedby="form-title" />
             <span id="alert-invalid-adress-complement"></span>
         </div>
-        <div class="col-md-6 has-validation">
+        <div class="col-md-6">
             <label for="code-postal" class="form-label">Code postal</label>
             <input type="text" id="code-postal" name="code-postal" class="form-control border-2" aria-label="Code postal" aria-describedby="form-title" />
             <span id="alert-invalid-zip-code"></span>
         </div>
-        <div class="col-md-6 mb-3 has-validation">
+        <div class="col-md-6 mb-3">
             <label for="ville" class="form-label">Ville</label>
             <input type="text" id="ville" name="ville" class="form-control border-2" aria-label="Ville" aria-describedby="form-title" />
             <span id="alert-invalid-city"></span>
@@ -321,13 +318,9 @@ function cartFormSend() {
                             "email" : email.value
                             };
         const jsonProducts = JSON.parse(localStorage.getItem("Panier"));
-        let products = [];
-        jsonProducts.map(elt => {
-            let elementId = elt.id;
-            products.push(elementId);
-        });
+        const products = jsonProducts.map(elt => elt.id);
         
-        fetch("http://localhost:3000/api/cameras/order",
+        fetch(`${backendURLorigin}/api/cameras/order`,
             {   method: "POST",
                 headers: { 
                 'Accept': 'application/json', 
@@ -341,7 +334,7 @@ function cartFormSend() {
                 return res.json()
             }
         })
-        .then(data =>{ 
+        .then(data => { 
             localStorage.removeItem("Panier");
             showCommandConfirmation(data);
         })
@@ -350,6 +343,7 @@ function cartFormSend() {
 };
 
 function showCommandConfirmation(data) {
+    history.pushState(null, null, "?page=confirmation");
     numberOfItemsInCart();
     changeTitleContentOfPage("Confirmation de votre commande ! 👍");
     changeMetaTitle("Orinoco - Confirmation de votre commande");
@@ -370,7 +364,5 @@ function showCommandConfirmation(data) {
             <p class="fs-4">Merci ${data.contact.firstName} ! 😊</p>
         </div>
     `;
-
     mainContainer.append(confirmationContainer);
-    history.pushState(null, null, "?page=comfirmation");
 };

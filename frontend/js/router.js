@@ -10,9 +10,8 @@ class Router {
         const pageParam = new URL(location).searchParams.get("page");
         if (pageParam) {
             return pageParam;
-        } else {
-            return false;
         }
+        return false;
     };
 
     getCart() {
@@ -34,7 +33,6 @@ class Router {
         const confirmationContainer = document.querySelector(".confirmation-body");
 
         if (!getIdInUrl() && location.href === homeUrl) {
-            console.log("Page d'accueil");
             mainDiv.classList.remove("d-none");
             secondDiv.classList.add("d-none");
             cartContainer && cartContainer.remove();
@@ -45,14 +43,13 @@ class Router {
 
         } else if (getIdInUrl()) {
             const id = getIdInUrl();
-            console.log("Page de l'article avec l'id : " + id);
             history.pushState(null, null, `${homeUrl}?id=${id}`);
             mainDiv.classList.add("d-none");
             secondDiv.classList.remove("d-none");
             cartContainer && cartContainer.remove();
             cartContainer && cartContainer.classList.add("d-none");
             element.getAllArticles();
-            element.getArticleById2(id);
+            element.getArticleById(id);
             this.getCart();
 
         } else if (this.getPageParam()) {
@@ -60,16 +57,13 @@ class Router {
                 changeTitleContentOfPage("Votre panier");
                 changeMetaTitle("Orinoco - votre panier");
                 element.getAllArticles();
-                console.log("Page panier !");
                 showCart();
                 history.pushState(null, null, location.pathname + "?page=panier");
             } else if (this.getPageParam() === "confirmation") {
                 changeTitleContentOfPage("Votre panier");
                 changeMetaTitle("Orinoco - votre panier");
-                console.log("Confirmation de la commande.");
                 history.pushState(null, null, location.pathname + "?page=confirmation");
             } else {
-                console.log("page introuvable");
                 // Redirige vers homepage
                 this.url = homeUrl;
                 element.getAllArticles();
