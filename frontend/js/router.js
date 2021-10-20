@@ -33,17 +33,19 @@ class Router {
         const confirmationContainer = document.querySelector(".confirmation-body");
 
         if (!getIdInUrl() && location.href === homeUrl) {
+            const homeBtn = document.querySelector("#home-btn");
+            homeBtn.classList.add("active");
             mainDiv.classList.remove("d-none");
             secondDiv.classList.add("d-none");
             cartContainer && cartContainer.remove();
             confirmationContainer && confirmationContainer.remove();
-            history.pushState(null, null, homeUrl);
+            history.pushState(null, null, "index.html");
             element.getAllArticles();
             this.getCart();
 
         } else if (getIdInUrl()) {
             const id = getIdInUrl();
-            history.pushState(null, null, `${homeUrl}?id=${id}`);
+            history.pushState(null, null, `?id=${id}`);
             mainDiv.classList.add("d-none");
             secondDiv.classList.remove("d-none");
             cartContainer && cartContainer.remove();
@@ -54,20 +56,22 @@ class Router {
 
         } else if (this.getPageParam()) {
             if (this.getPageParam() === "panier") {
+                const confirmationContainer = document.querySelector(".confirmation-body");
+                confirmationContainer && confirmationContainer.remove();
                 changeTitleContentOfPage("Votre panier");
                 changeMetaTitle("Orinoco - votre panier");
                 element.getAllArticles();
                 showCart();
-                history.pushState(null, null, location.pathname + "?page=panier");
+                history.pushState(null, null, "?page=panier");
             } else if (this.getPageParam() === "confirmation") {
                 changeTitleContentOfPage("Votre panier");
                 changeMetaTitle("Orinoco - votre panier");
-                history.pushState(null, null, location.pathname + "?page=confirmation");
+                history.pushState(null, null, "?page=confirmation");
             } else {
                 // Redirige vers homepage
                 this.url = homeUrl;
                 element.getAllArticles();
-                history.pushState(null, null, homeUrl);
+                history.pushState(null, null, "index.html");
                 cartContainer.remove();
                 cartContainer && cartContainer.classList.add("d-none");
                 this.getCart();
