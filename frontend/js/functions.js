@@ -1,6 +1,6 @@
 function goToHomeBtns() {
    // Gestion des boutons vers homepage
-   const backHome = document.querySelectorAll("#home-btn");
+   const backHome = document.querySelectorAll(".go-to-home-btn");
    backHome.forEach(element => {
       element.addEventListener("click", function(e) {
          e.stopPropagation();
@@ -12,28 +12,26 @@ function goToHomeBtns() {
 
 function backToHome() {
    // Modification de l'url
-   const homeUrl = "/frontend/view/index.html";
-   history.pushState(null, null, homeUrl);
+   history.pushState(null, null, "index.html");
    const divToHide = document.querySelector(".second-div");
    const divToShow = document.querySelector(".main-div");
    const cartContainer = document.querySelector(".cart-body");
+   const confirmationContainer = document.querySelector(".confirmation-body");
    changeTitleContentOfPage("Découvrez tous nos appareils photo");
    changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
-   if (cartContainer) {cartContainer.remove()};
-   divToHide.classList.add("d-none");
-   divToShow.classList.remove("d-none");
+   const homeBtn = document.querySelector("#home-btn");
+   homeBtn.classList.add("active");
+   const cartBtn = document.querySelector("#cart-btn");
+   cartBtn.classList.contains("active") && cartBtn.classList.remove("active");
+   cartContainer && cartContainer.remove();
+   divToHide && divToHide.classList.add("d-none");
+   divToShow && divToShow.classList.remove("d-none");
+   confirmationContainer && confirmationContainer.remove();
 };
 
 function getIdInUrl() {
    return new URL(location.href).searchParams.get("id");
 };
-
-// function deleteSavedItem() {
-//    let id = getIdInUrl();
-//    if(id) {
-//       localStorage.removeItem(id);
-//    }
-// };
 
 function getFormatedPrice(price) {
    const formatedPrice = price / 1000 + "0";

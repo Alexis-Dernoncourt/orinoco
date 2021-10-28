@@ -53,8 +53,9 @@ class Article {
         fetch(`${backendURLorigin}/api/cameras/${articleId}`)
         .then(data => data.json())
         .then(article => {
-            const urlOfArticle = location.pathname + `?id=${articleId}`;
-            history.pushState(null, null, urlOfArticle);
+            history.pushState(null, null, `?id=${articleId}`);
+            const homeBtn = document.querySelector("#home-btn");
+            homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
             const idInUrl = getIdInUrl();
             // Affiche l'article sélectionné :
             if (idInUrl) {
@@ -103,7 +104,7 @@ class Article {
                         </div>
                     </div>
                     <p class="text-end m-5 card-link">
-                        <a id="home-btn" data-link="home" class="text-decoration-none text-reset" href="${localURLorigin}/frontend/view/index.html">
+                        <a data-link="home" class="text-decoration-none text-reset go-to-home-btn" href="${localURLorigin}/frontend/view/index.html">
                             < Retourner vers l'accueil
                         </a>
                     </p>

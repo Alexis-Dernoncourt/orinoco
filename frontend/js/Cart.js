@@ -16,7 +16,6 @@ function getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd) 
 };
 
 function addItemToCart(item) {
-    // Initialisation du panier (tableau vide)
     let cart = [];
     if (localStorage.getItem("Panier")) {
         const uniqueIdentifierOfArticleToAdd = item.elementIdentifier;
@@ -26,17 +25,15 @@ function addItemToCart(item) {
         // Si l'article est déjà présent au sein du panier
         // (vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément)
             if (cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd)) {
-                //const itemToRemove = cart.findIndex(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd);
                 cart.map((element, key) => {
-                    if (element.elementIdentifier === uniqueIdentifierOfArticleToAdd) {
-                        const previousQuantity = element.quantite;
-                        const nouvelleQuantite = previousQuantity + item.quantite;
+                    if (element.elementIdentifier === uniqueIdentifierOfArticleToAdd) {                      
+                        const nouvelleQuantite = parseInt(item.quantite);
                         const elementIdentifier = item.id + item.objectif;
-                        const panierModifie = {elementIdentifier, "id" : item.id, "produit" : item.produit, "objectif" : item.objectif, "prix" : item.prix, "quantite" : nouvelleQuantite};
+                        const panierModifie = {elementIdentifier, "id" : element.id, "produit" : element.produit, "objectif" : element.objectif, "prix" : element.prix, "quantite" : nouvelleQuantite};
                         cart.splice(key, 1, panierModifie);
                         localStorage.setItem("Panier", JSON.stringify(cart));
                         numberOfItemsInCart();
-                    }
+                    };
                 });
             } else {
                 // L'article n'est PAS présent dans le panier, on l'y ajoute
@@ -55,19 +52,17 @@ function addItemToCart(item) {
 
 function removeItemInCart(key) {
     const mainDiv = document.querySelector("#main-container");
-    let cart = [];
-    let localCart = JSON.parse(localStorage.getItem("Panier"));
-    
-    if (localStorage.getItem("Panier") && localStorage.getItem("Panier").length > 1) {
-        cart.push(...localCart);
-        let itemToRemove = cart.filter(el => el.elementIdentifier !== key);
+    const cartContainer = document.querySelector(".cart-body");
+    const panier = JSON.parse(localStorage.getItem("Panier"));
+    if (panier && panier.length > 1) {
+        const itemToRemove = panier.filter(el => el.elementIdentifier !== key);
         localStorage.setItem("Panier", JSON.stringify(itemToRemove));
-        mainDiv.innerHTML = "";
+        mainDiv.removeChild(cartContainer);
         showCart();
         numberOfItemsInCart();
-    } else if (localCart.length <= 1) {
+    } else if (panier.length <= 1) {
         localStorage.removeItem("Panier");
-        mainDiv.innerHTML = " ";
+        mainDiv.removeChild(cartContainer);
         showCart();
         numberOfItemsInCart();
     }
@@ -89,11 +84,17 @@ function numberOfItemsInCart() {
 function showCart() {
     changeTitleContentOfPage("Votre panier");
     changeMetaTitle("Orinoco - votre panier");
+    const cartBtn = document.querySelector("#cart-btn");
+    cartBtn.classList.add("active");
+    const homeBtn = document.querySelector("#home-btn");
+    homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
     const currentCart = JSON.parse(localStorage.getItem("Panier"));
 
     const mainDiv = document.querySelector("#main-container");
     const allArticles = document.querySelector(".main-div");
     const secondDiv = document.querySelector(".second-div");
+    const confirmationContainer = document.querySelector(".confirmation-body");
+    confirmationContainer && confirmationContainer.remove();
     secondDiv && secondDiv.classList.add("d-none");
     allArticles && allArticles.classList.add("d-none");
 
@@ -131,7 +132,7 @@ function showCart() {
             <tr class="text-center">
                 <td>${title}</td>
                 <td class="max-width-50">
-                    <span class="mx-1">${el.quantite}</span>
+                        <input type="number" data-element="${el.elementIdentifier}" value="${el.quantite}" class="changeQuantity border-0 rounded mx-1 max-width-50 text-center" min="1" max="20" step="1" />
                 </td>
                 <td>${el.prix / 1000}0€</td>
                 <td>${sousTotal / 1000}0€</td>
@@ -169,6 +170,22 @@ function showCart() {
                 removeItemInCart(uid);
             });
         };
+
+        const changeQuantity = document.querySelectorAll(".changeQuantity");
+        for(let changeBtn of changeQuantity) {
+            changeBtn.addEventListener("change", function(e) {
+                let newQuantity = e.target.value;
+                const element = this.dataset.element;
+                currentCart.map(el => {
+                    if (el.elementIdentifier === element) {
+                        const elementNewQuantity = newQuantity;
+                        const newItemChanged = {elementIdentifier: el.elementIdentifier, id: el.id, objectif: el.objectif, quantite: elementNewQuantity};
+                        addItemToCart(newItemChanged);
+                    }
+                });
+            });
+        };
+        
         
     } else {
         mainDiv.appendChild(cartBody);
@@ -241,12 +258,12 @@ function createCommandForm(element) {
     const city = document.querySelector("#ville");
 
     //RegEx :
-    const nameMatch = new RegExp("^[a-zA-Z- .'\-]+$", "i");
+    const nameMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'\-]+$", "i");
     const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&'*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
-    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .'/\-]{4,}", "ig");
-    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,âéèéêëÉ'/\-]+$", "ig");
+    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ'/\-]{4,}", "ig");
+    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ'/\-]+$", "ig");
     const zipCodeMatch = new RegExp("^[0-9]{5}$", "g");
-    const cityMatch = new RegExp("^[a-zA-Z- .'/\-]+$", "ig");
+    const cityMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'/\-]+$", "ig");
 
     regexInputValidation(firstname, nameMatch, "#alert-invalid-firstname", "*Veuillez saisir un prénom valide (exemple: jean ou Jean ou Jean-Louis ou Jean Louis). N'entrez pas de chiffres ni de caractère spécial du type <>*$#/...");
     regexInputValidation(lastname, nameMatch, "#alert-invalid-lastname", "*Veuillez saisir un nom valide (pas de chiffres ni de caractère spécial du type <>*$#/...).");
@@ -301,7 +318,6 @@ function regexInputValidation(input, regexCondition, spanAlertSelector, spanAler
 
 function cartFormSend() {
     const form = document.querySelector("#form-validation")
-    //Select inputs
     const firstname = document.querySelector("#prenom");
     const lastname = document.querySelector("#nom");
     const email = document.querySelector("#email");
@@ -364,5 +380,5 @@ function showCommandConfirmation(data) {
             <p class="fs-4">Merci ${data.contact.firstName} ! 😊</p>
         </div>
     `;
-    mainContainer.append(confirmationContainer);
+    mainContainer.appendChild(confirmationContainer);
 };
