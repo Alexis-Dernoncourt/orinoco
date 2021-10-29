@@ -85,20 +85,19 @@ function showCart() {
     changeTitleContentOfPage("Votre panier");
     changeMetaTitle("Orinoco - votre panier");
     const cartBtn = document.querySelector("#cart-btn");
-    cartBtn.classList.add("active");
     const homeBtn = document.querySelector("#home-btn");
-    homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
     const currentCart = JSON.parse(localStorage.getItem("Panier"));
-
     const mainDiv = document.querySelector("#main-container");
     const allArticles = document.querySelector(".main-div");
     const secondDiv = document.querySelector(".second-div");
     const confirmationContainer = document.querySelector(".confirmation-body");
+    const cartBody = document.createElement("div");
+
+    homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
+    cartBtn.classList.add("active");
     confirmationContainer && confirmationContainer.remove();
     secondDiv && secondDiv.classList.add("d-none");
     allArticles && allArticles.classList.add("d-none");
-
-    const cartBody = document.createElement("div");
     cartBody.classList.add("px-md-5", "cart-body", "min-height-50vh");
     history.pushState(null, null, "?page=panier");
     
@@ -107,6 +106,11 @@ function showCart() {
         const tableCartContainer = document.createElement("table");
         const tableHead = document.createElement("thead");
         const tableBody = document.createElement("tbody");
+        const div = document.createElement("div");
+        const div2 = document.createElement("div");
+
+        
+        
 
         let total = [];
         cartListContainer.classList.add("table-responsive");
@@ -147,7 +151,6 @@ function showCart() {
         cartListContainer.append(tableCartContainer);
         mainDiv.appendChild(cartBody);
         cartBody.append(cartListContainer);
-        const div = document.createElement("div");
         cartBody.append(div);
         div.classList.add("container", "text-end", "main-font-family", "nav-link");
         div.innerHTML += ` 
@@ -157,7 +160,6 @@ function showCart() {
         ;
 
         mainDiv.appendChild(cartBody);
-        const div2 = document.createElement("div");
         cartBody.append(div2);
         div2.classList.add("container", "form-container");
         createCommandForm(div2);
@@ -188,8 +190,8 @@ function showCart() {
         
         
     } else {
-        mainDiv.appendChild(cartBody);
         const emptyCartTextContainer = document.createElement("h3");
+        mainDiv.appendChild(cartBody);
         emptyCartTextContainer.textContent = "Votre panier est vide 😕";
         emptyCartTextContainer.classList.add("text-center", "mt-5");
         cartBody.append(emptyCartTextContainer);
@@ -317,7 +319,6 @@ function regexInputValidation(input, regexCondition, spanAlertSelector, spanAler
 }
 
 function cartFormSend() {
-    const form = document.querySelector("#form-validation")
     const firstname = document.querySelector("#prenom");
     const lastname = document.querySelector("#nom");
     const email = document.querySelector("#email");
@@ -366,11 +367,9 @@ function showCommandConfirmation(data) {
 
     const mainContainer = document.querySelector("#main-container");
     const cartBody = document.querySelector(".cart-body");
-    cartBody && cartBody.remove();
-
     const confirmationContainer = document.createElement("div");
+    cartBody && cartBody.remove();
     confirmationContainer.classList.add("px-md-5", "confirmation-body", "min-height-50vh");
-
     confirmationContainer.innerHTML = `
         <div class="container text-center">
             <h2>Nous avons bien reçu votre commande !</h2>

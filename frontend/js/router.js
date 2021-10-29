@@ -10,8 +10,9 @@ class Router {
         const pageParam = new URL(location).searchParams.get("page");
         if (pageParam) {
             return pageParam;
+        } else {
+            return false;
         }
-        return false;
     };
 
     getCart() {
