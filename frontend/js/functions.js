@@ -39,7 +39,7 @@ function getFormatedPrice(price) {
    return newFormatedPrice;
 };
 
-// Récupère et retourne les options de choix de la lentille variables pour l'élément input type select
+/** Récupère et retourne les options de choix de la lentille variables pour l'élément input type select */
  function showOptions(options) {
    const showLenses = options.map(el =>
       `<option value="${el}">${el}</option>`
@@ -47,7 +47,7 @@ function getFormatedPrice(price) {
    return showLenses;
 };
 
-// Récupère et retourne la valeur du select
+/** Récupère et retourne la valeur du select */
 function getSelectionnedLense(selectId) {
    let selectElmt = document.getElementById(selectId);
    return selectElmt.options[selectElmt.selectedIndex].value;
@@ -61,5 +61,5 @@ function changeMetaTitle(string) {
    document.title = string;
 };
 
-// Récupération, si existant, du nombre d'article(s) ajouté(s) au panier (notification visuelle)
+/** Récupération, si existant, du nombre d'article(s) ajouté(s) au panier (notification visuelle) */
 numberOfItemsInCart();

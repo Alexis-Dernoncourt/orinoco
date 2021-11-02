@@ -1,4 +1,4 @@
-// Gestion du panier
+/** Gestion du panier */
 
 function getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd) {
     const errorMessage = document.querySelector("#alert-message");
@@ -22,8 +22,9 @@ function addItemToCart(item) {
         let articlesInCart = JSON.parse(localStorage.getItem("Panier"));
         cart.push(...articlesInCart);
  
-        // Si l'article est déjà présent au sein du panier
-        // (vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément)
+        /** Si l'article est déjà présent au sein du panier :
+         *    vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément
+         */
             if (cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd)) {
                 cart.map((element, key) => {
                     if (element.elementIdentifier === uniqueIdentifierOfArticleToAdd) {                      
@@ -36,14 +37,15 @@ function addItemToCart(item) {
                     };
                 });
             } else {
-                // L'article n'est PAS présent dans le panier, on l'y ajoute
+                /** L'article n'est PAS présent dans le panier, on l'y ajoute */
                 cart.push(item);
                 localStorage.setItem("Panier", JSON.stringify(cart));
                 numberOfItemsInCart();
             }
     } else {
-        // Si le panier n'est pas présent au sein du localStorage
-        // On créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
+        /** Si le panier n'est pas présent au sein du localStorage :
+         *   on créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
+         */
         cart.push(item);
         localStorage.setItem("Panier", JSON.stringify(cart));
         numberOfItemsInCart();

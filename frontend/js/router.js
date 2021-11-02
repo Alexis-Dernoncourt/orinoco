@@ -1,3 +1,4 @@
+/** Gestion du routeur */
 const localURLorigin = "http://127.0.0.1:5500";
 
 class Router {
@@ -14,8 +15,8 @@ class Router {
         return false;
     };
 
+    /** Afficher le panier au clic sur le bouton du menu */
     getCart() {
-        // Afficher le panier au clic sur le bouton du menu
         const cartBtn = document.querySelector("a[data-link=cart]");
         cartBtn.addEventListener("click", function(e) {
             e.preventDefault();
