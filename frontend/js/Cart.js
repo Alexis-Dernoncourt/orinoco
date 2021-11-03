@@ -1,4 +1,6 @@
-// Gestion du panier
+/** 
+ * Gestion du panier
+ */
 
 function getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd) {
     const errorMessage = document.querySelector("#alert-message");
@@ -22,8 +24,10 @@ function addItemToCart(item) {
         let articlesInCart = JSON.parse(localStorage.getItem("Panier"));
         cart.push(...articlesInCart);
  
-        // Si l'article est déjà présent au sein du panier
-        // (vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément)
+        /** 
+         * Si l'article est déjà présent au sein du panier :
+         *   vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément
+         */
             if (cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd)) {
                 cart.map((element, key) => {
                     if (element.elementIdentifier === uniqueIdentifierOfArticleToAdd) {                      
@@ -36,14 +40,18 @@ function addItemToCart(item) {
                     };
                 });
             } else {
-                // L'article n'est PAS présent dans le panier, on l'y ajoute
+                /** 
+                 * L'article n'est PAS présent dans le panier, on l'y ajoute 
+                 */
                 cart.push(item);
                 localStorage.setItem("Panier", JSON.stringify(cart));
                 numberOfItemsInCart();
             }
     } else {
-        // Si le panier n'est pas présent au sein du localStorage
-        // On créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
+        /** 
+         * Si le panier n'est pas présent au sein du localStorage :
+         *   on créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
+         */
         cart.push(item);
         localStorage.setItem("Panier", JSON.stringify(cart));
         numberOfItemsInCart();
@@ -85,20 +93,19 @@ function showCart() {
     changeTitleContentOfPage("Votre panier");
     changeMetaTitle("Orinoco - votre panier");
     const cartBtn = document.querySelector("#cart-btn");
-    cartBtn.classList.add("active");
     const homeBtn = document.querySelector("#home-btn");
-    homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
     const currentCart = JSON.parse(localStorage.getItem("Panier"));
-
     const mainDiv = document.querySelector("#main-container");
     const allArticles = document.querySelector(".main-div");
     const secondDiv = document.querySelector(".second-div");
     const confirmationContainer = document.querySelector(".confirmation-body");
+    const cartBody = document.createElement("div");
+
+    homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
+    cartBtn.classList.add("active");
     confirmationContainer && confirmationContainer.remove();
     secondDiv && secondDiv.classList.add("d-none");
     allArticles && allArticles.classList.add("d-none");
-
-    const cartBody = document.createElement("div");
     cartBody.classList.add("px-md-5", "cart-body", "min-height-50vh");
     history.pushState(null, null, "?page=panier");
     
@@ -107,6 +114,11 @@ function showCart() {
         const tableCartContainer = document.createElement("table");
         const tableHead = document.createElement("thead");
         const tableBody = document.createElement("tbody");
+        const div = document.createElement("div");
+        const div2 = document.createElement("div");
+
+        
+        
 
         let total = [];
         cartListContainer.classList.add("table-responsive");
@@ -147,7 +159,6 @@ function showCart() {
         cartListContainer.append(tableCartContainer);
         mainDiv.appendChild(cartBody);
         cartBody.append(cartListContainer);
-        const div = document.createElement("div");
         cartBody.append(div);
         div.classList.add("container", "text-end", "main-font-family", "nav-link");
         div.innerHTML += ` 
@@ -157,7 +168,6 @@ function showCart() {
         ;
 
         mainDiv.appendChild(cartBody);
-        const div2 = document.createElement("div");
         cartBody.append(div2);
         div2.classList.add("container", "form-container");
         createCommandForm(div2);
@@ -188,8 +198,8 @@ function showCart() {
         
         
     } else {
-        mainDiv.appendChild(cartBody);
         const emptyCartTextContainer = document.createElement("h3");
+        mainDiv.appendChild(cartBody);
         emptyCartTextContainer.textContent = "Votre panier est vide 😕";
         emptyCartTextContainer.classList.add("text-center", "mt-5");
         cartBody.append(emptyCartTextContainer);
@@ -259,11 +269,11 @@ function createCommandForm(element) {
 
     //RegEx :
     const nameMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'\-]+$", "i");
-    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&'*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
-    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ'/\-]{4,}", "ig");
-    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ'/\-]+$", "ig");
+    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
+    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ/\-]{4,}", "ig");
+    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ/\-]+$", "ig");
     const zipCodeMatch = new RegExp("^[0-9]{5}$", "g");
-    const cityMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'/\-]+$", "ig");
+    const cityMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ/\-]+$", "ig");
 
     regexInputValidation(firstname, nameMatch, "#alert-invalid-firstname", "*Veuillez saisir un prénom valide (exemple: jean ou Jean ou Jean-Louis ou Jean Louis). N'entrez pas de chiffres ni de caractère spécial du type <>*$#/...");
     regexInputValidation(lastname, nameMatch, "#alert-invalid-lastname", "*Veuillez saisir un nom valide (pas de chiffres ni de caractère spécial du type <>*$#/...).");
@@ -317,7 +327,6 @@ function regexInputValidation(input, regexCondition, spanAlertSelector, spanAler
 }
 
 function cartFormSend() {
-    const form = document.querySelector("#form-validation")
     const firstname = document.querySelector("#prenom");
     const lastname = document.querySelector("#nom");
     const email = document.querySelector("#email");
@@ -366,11 +375,9 @@ function showCommandConfirmation(data) {
 
     const mainContainer = document.querySelector("#main-container");
     const cartBody = document.querySelector(".cart-body");
-    cartBody && cartBody.remove();
-
     const confirmationContainer = document.createElement("div");
+    cartBody && cartBody.remove();
     confirmationContainer.classList.add("px-md-5", "confirmation-body", "min-height-50vh");
-
     confirmationContainer.innerHTML = `
         <div class="container text-center">
             <h2>Nous avons bien reçu votre commande !</h2>

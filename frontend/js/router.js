@@ -14,8 +14,8 @@ class Router {
         return false;
     };
 
+    // Afficher le panier au clic sur le bouton du menu
     getCart() {
-        // Afficher le panier au clic sur le bouton du menu
         const cartBtn = document.querySelector("a[data-link=cart]");
         cartBtn.addEventListener("click", function(e) {
             e.preventDefault();
