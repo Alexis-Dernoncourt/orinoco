@@ -1,6 +1,7 @@
 const backendURLorigin = "http://localhost:3000";
-/** Représentation du format d'un article et méthodes de gestion de l'objet
-    (affichage de la liste des articles, récupération d'un article unique, formatage des prix...)
+/** 
+ * Représentation du format d'un article et méthodes de gestion de l'objet
+ *  (affichage de la liste des articles, récupération d'un article unique, formatage des prix...)
  */
 
 class Article {

@@ -1,4 +1,6 @@
-/** Gestion du panier */
+/** 
+ * Gestion du panier
+ */
 
 function getElementToAddToCart(elt, id, name, lense, price, numberOfItemsToAdd) {
     const errorMessage = document.querySelector("#alert-message");
@@ -22,8 +24,9 @@ function addItemToCart(item) {
         let articlesInCart = JSON.parse(localStorage.getItem("Panier"));
         cart.push(...articlesInCart);
  
-        /** Si l'article est déjà présent au sein du panier :
-         *    vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément
+        /** 
+         * Si l'article est déjà présent au sein du panier :
+         *   vérifie si identiques : si oui met à jour le localStorage en modifiant la quantité; si non : ajoute un nouvel élément
          */
             if (cart.some(el => el.elementIdentifier === uniqueIdentifierOfArticleToAdd)) {
                 cart.map((element, key) => {
@@ -37,13 +40,16 @@ function addItemToCart(item) {
                     };
                 });
             } else {
-                /** L'article n'est PAS présent dans le panier, on l'y ajoute */
+                /** 
+                 * L'article n'est PAS présent dans le panier, on l'y ajoute 
+                 */
                 cart.push(item);
                 localStorage.setItem("Panier", JSON.stringify(cart));
                 numberOfItemsInCart();
             }
     } else {
-        /** Si le panier n'est pas présent au sein du localStorage :
+        /** 
+         * Si le panier n'est pas présent au sein du localStorage :
          *   on créé le panier et y ajoute le nouvel article désiré avec toutes ses caractéristiques
          */
         cart.push(item);
@@ -263,11 +269,11 @@ function createCommandForm(element) {
 
     //RegEx :
     const nameMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'\-]+$", "i");
-    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&'*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
-    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ'/\-]{4,}", "ig");
-    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ'/\-]+$", "ig");
+    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
+    const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ/\-]{4,}", "ig");
+    const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ/\-]+$", "ig");
     const zipCodeMatch = new RegExp("^[0-9]{5}$", "g");
-    const cityMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'/\-]+$", "ig");
+    const cityMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ/\-]+$", "ig");
 
     regexInputValidation(firstname, nameMatch, "#alert-invalid-firstname", "*Veuillez saisir un prénom valide (exemple: jean ou Jean ou Jean-Louis ou Jean Louis). N'entrez pas de chiffres ni de caractère spécial du type <>*$#/...");
     regexInputValidation(lastname, nameMatch, "#alert-invalid-lastname", "*Veuillez saisir un nom valide (pas de chiffres ni de caractère spécial du type <>*$#/...).");
