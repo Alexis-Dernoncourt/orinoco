@@ -269,7 +269,7 @@ function createCommandForm(element) {
 
     //RegEx :
     const nameMatch = new RegExp("^[a-zA-Z- .éèâêëûüÉ'\-]+$", "i");
-    const mailMatch = new RegExp("(^[a-zA-Z0-9.!#$%&*+/=?^_`{|}~\-]+)@([a-zA-Z0-9.!#$%&*+/=?^_`~\-]+)\.([a-zA-Z0-9]{2,}$)", "ig");
+    const mailMatch = new RegExp("^[a-zA-Z0-9.!#$%&*+/=?^_{|}~\-]+@[a-zA-Z0-9.!#$%&*+/=?^_~\-]+\\.[a-zA-Z0-9]{2,}$", "ig");
     const streetNumberAndNameMatch = new RegExp("^[0-9- \-,]+[a-zA-Z- .éèâêëûüÉ/\-]{4,}", "ig");
     const adressComplementMatch = new RegExp("^[a-zA-Z0-9- .,éèâêëûüÉ/\-]+$", "ig");
     const zipCodeMatch = new RegExp("^[0-9]{5}$", "g");

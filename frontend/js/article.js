@@ -60,7 +60,7 @@ class Article {
             homeBtn.classList.contains("active") && homeBtn.classList.remove("active");
             const idInUrl = getIdInUrl();
             // Affiche l'article sélectionné :
-            if (idInUrl) {
+            if (idInUrl && idInUrl === article._id) {
                 // Cache la liste des articles sur la homepage :
                 const divToHide = document.querySelector(".main-div");
                 const cartContainer = document.querySelector(".cart-body");
@@ -130,7 +130,14 @@ class Article {
                 });
 
                 goToHomeBtns();
-            };
+            } else {
+                const divToHide = document.querySelector(".main-div");
+                const secondDiv = document.querySelector(".second-div");
+                secondDiv && secondDiv.classList.add("d-none");   
+                divToHide && divToHide.classList.remove("d-none");
+                this.getAllArticles();
+                history.pushState(null, null, "index.html");
+            }
         })
         .catch(err => {
             console.log("Il y a eu une erreur : " + err);
