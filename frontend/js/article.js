@@ -134,10 +134,8 @@ class Article {
                 const mainDiv = document.querySelector(".main-div");
                 const secondDiv = document.querySelector(".second-div");
                 secondDiv && secondDiv.classList.add("d-none");
-                mainDiv.innerHTML = '';
+                secondDiv.innerHTML = '';
                 mainDiv && mainDiv.classList.remove("d-none");
-
-                this.getAllArticles();
                 history.pushState(null, null, "index.html");
             }
         })
