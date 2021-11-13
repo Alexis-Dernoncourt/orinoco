@@ -131,10 +131,12 @@ class Article {
 
                 goToHomeBtns();
             } else {
-                const divToHide = document.querySelector(".main-div");
+                const mainDiv = document.querySelector(".main-div");
                 const secondDiv = document.querySelector(".second-div");
-                secondDiv && secondDiv.classList.add("d-none");   
-                divToHide && divToHide.classList.remove("d-none");
+                secondDiv && secondDiv.classList.add("d-none");
+                mainDiv.innerHTML = '';
+                mainDiv && mainDiv.classList.remove("d-none");
+
                 this.getAllArticles();
                 history.pushState(null, null, "index.html");
             }
