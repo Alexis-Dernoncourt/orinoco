@@ -17,7 +17,7 @@ function backToHome() {
    const divToShow = document.querySelector(".main-div");
    const cartContainer = document.querySelector(".cart-body");
    const confirmationContainer = document.querySelector(".confirmation-body");
-   changeTitleContentOfPage("Découvrez tous nos appareils photo");
+   changeTitleContentOfPage("Decouvrez tous nos appareils photo");
    changeMetaTitle("Orinoco - Découvrez tous nos appareils photo");
    const homeBtn = document.querySelector("#home-btn");
    homeBtn.classList.add("active");
